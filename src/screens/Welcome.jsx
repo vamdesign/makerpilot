@@ -95,13 +95,13 @@ export default function Welcome() {
     <div className="flex flex-col min-h-screen bg-white">
 
       {/* ── Header ── */}
-      <div className="flex items-center justify-between px-5 pt-12 pb-2">
+      <div className="flex items-center justify-between px-5 pt-16 pb-2">
 
         {/* Logo — PNG from public folder */}
         <img
           src="/MakerPilot_Logo.png"
           alt="MakerPilot"
-          className="h-8 w-auto object-contain"
+          className="h-10 w-auto object-contain"
         />
 
         <button
