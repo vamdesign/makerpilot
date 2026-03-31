@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { font-family: 'DM Sans', system-ui, sans-serif; }
+  body {
+    background: #FAFAF8;
+    color: #111827;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  /* ── App shell: centers on desktop, full-width on mobile ── */
+  .app-shell {
+    @apply w-full max-w-app mx-auto min-h-screen bg-white relative flex flex-col overflow-hidden;
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.04), 0 4px 24px rgba(0,0,0,0.06);
+  }
+
+  /* ── Screen padding (leaves room for bottom nav) ── */
+  .screen-pad {
+    @apply px-5 pt-6 pb-28 flex-1 overflow-y-auto;
+  }
+
+  /* ── Bottom navigation ── */
+  .bottom-nav {
+    @apply fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-app
+           bg-white border-t border-gray-100 flex justify-around
+           items-center z-50 px-2;
+    height: 64px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* ── Buttons ── */
+  .btn-primary {
+    @apply w-full py-4 rounded-2xl bg-teal text-white font-semibold
+           text-base tracking-wide transition-transform
+           active:scale-[0.98] focus:outline-none;
+  }
+  .btn-secondary {
+    @apply w-full py-4 rounded-2xl border border-gray-200
+           text-gray-600 font-medium text-base transition-transform
+           active:scale-[0.98] focus:outline-none bg-white;
+  }
+  .btn-ghost {
+    @apply py-2 px-4 rounded-xl text-teal font-medium text-sm
+           transition-colors hover:bg-teal-light active:scale-[0.98];
+  }
+
+  /* ── Cards ── */
+  .card {
+    @apply bg-white border border-gray-100 rounded-2xl p-4;
+  }
+  .card-alert {
+    @apply bg-white border border-red-100 rounded-2xl p-4;
+  }
+
+  /* ── Pill badges ── */
+  .pill {
+    @apply inline-flex items-center gap-1.5 px-3 py-1
+           rounded-full text-xs font-medium;
+  }
+  .pill-warn  { @apply pill bg-orange-50 text-warn; }
+  .pill-ok    { @apply pill bg-teal-light text-teal-dark; }
+  .pill-crit  { @apply pill bg-red-50 text-critical; }
+
+  /* ── Input fields ── */
+  .input {
+    @apply w-full px-4 py-3 rounded-xl border border-gray-200
+           text-gray-900 text-base placeholder-gray-400
+           focus:outline-none focus:border-teal focus:ring-2
+           focus:ring-teal/10 transition-colors bg-white;
+  }
+
+  /* ── Section labels ── */
+  .section-label {
+    @apply text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3;
+  }
+}
