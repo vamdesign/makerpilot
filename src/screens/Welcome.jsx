@@ -1,5 +1,10 @@
-import { useNavigate } from 'react-router-dom'
-
+<div className="flex items-center">
+  <img 
+    src="/MakerPilot_Logo.png" 
+    alt="MakerPilot" 
+    className="h-8 w-auto object-contain"
+  />
+</div>
 // ── Top Etsy sellers illustration ────────────────────────────────
 const EtsyIllustration = () => (
   <svg width="100%" viewBox="0 0 360 200" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -159,10 +164,10 @@ export default function Welcome() {
 
       {/* ── Hero copy ── */}
       <div className="px-5 pt-1 pb-4">
-        <h1 className="font-serif text-3xl leading-tight text-gray-900 mb-3">
-          Don't fly blind on
-          <span className="text-teal italic"> your inventory.</span>
-        </h1>
+        <h1 className="font-serif text-[28px] leading-tight text-gray-900 mb-3">
+  Don't fly blind on{' '}
+  <span className="text-teal italic">your inventory.</span>
+</h1>
         <p className="text-gray-500 text-sm leading-relaxed">
           Made for Etsy sellers and craft show makers. Know what's running low,
           what to make next, and keep every channel in sync — in under 5 minutes a week.
