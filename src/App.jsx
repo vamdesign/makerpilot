@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import Welcome from './screens/Welcome'
 import Home from './screens/Home'
+import SignIn from './screens/SignIn'
+import SignUp from './screens/SignUp'
 
 // ── Nav icon components ──────────────────────────────────────────
 const IconHome = ({ active }) => (
@@ -61,7 +63,7 @@ const NAV_TABS = [
 function BottomNav() {
   const location = useLocation()
   const navigate = useNavigate()
-  const hideOn = ['/', '/business-type', '/quiz', '/connect-etsy', '/import']
+  const hideOn = ['/', '/signin', '/signup', '/business-type', '/quiz', '/connect-etsy', '/import']
   if (hideOn.includes(location.pathname)) return null
 
   return (
@@ -104,6 +106,8 @@ export default function App() {
       <div className="app-shell">
         <Routes>
           <Route path="/"          element={<Welcome />} />
+          <Route path="/signin"    element={<SignIn />} />
+          <Route path="/signup"    element={<SignUp />} />
           <Route path="/home"      element={<Home />} />
           <Route path="/inventory" element={<Placeholder title="Inventory" />} />
           <Route path="/record"    element={<Placeholder title="Record Sale" />} />
