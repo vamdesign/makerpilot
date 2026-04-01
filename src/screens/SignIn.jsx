@@ -32,33 +32,25 @@ const BackgroundDecor = () => (
     {/* top small middle cloud */}
     <img src="/cloud3.png" alt=""
       className="absolute right-20 top-43 w-16 opacity-35 pointer-events-none" />
-    {/* Bottom clouds */}
+    {/* Bottom cloud - bigger and moved slightly left but still on right */}
     <img src="/cloud1.png" alt=""
-      className="absolute right-12 bottom-40 w-32 opacity-45 pointer-events-none" />
+      className="absolute right-4 bottom-36 w-40 opacity-45 pointer-events-none" />
+    {/* Bottom left cloud and plane - moved up for better balance */}
     <img src="/cloud2.png" alt=""
-      className="absolute left-8 bottom-16 w-28 opacity-40 pointer-events-none" />
-    <img src="/cloud3.png" alt=""
-      className="absolute right-4 bottom-12 w-24 opacity-35 pointer-events-none" />
+      className="absolute left-4 bottom-28 w-28 opacity-40 pointer-events-none" />
+    <img src="/PP05.png" alt=""
+      className="absolute left-10 bottom-32 w-14 opacity-65 pointer-events-none" />
 
     {/* Paper airplanes - top area */}
     <img src="/PP04.png" alt=""
       className="absolute -right-4 top-28 w-16 opacity-75 pointer-events-none" />
-    {/* Top left plane - 12% bigger (w-14 from w-12) and not off page (left-2 instead of -left-2) */}
+    {/* Top left plane */}
     <img src="/PP02.png" alt=""
       className="absolute left-2 top-36 w-14 opacity-65 pointer-events-none" />
 
-    {/* Paper airplanes - bottom area */}
+    {/* Paper airplane - bottom right area */}
     <img src="/PP03.png" alt=""
       className="absolute right-6 bottom-28 w-14 opacity-70 pointer-events-none" />
-    {/* Bottom left plane - moved up */}
-    <img src="/PP05.png" alt=""
-      className="absolute left-8 bottom-40 w-16 opacity-65 pointer-events-none" />
-    {/* Bottom left plane - moved down and rotated 45 degrees right */}
-    <img src="/PP04.png" alt=""
-      className="absolute left-12 bottom-8 w-14 opacity-60 pointer-events-none"
-      style={{ transform: 'rotate(45deg)' }} />
-    <img src="/PP01.png" alt=""
-      className="absolute right-16 bottom-4 w-14 opacity-55 pointer-events-none" />
   </>
 )
 
@@ -68,15 +60,15 @@ const CardBackgroundDecor = () => (
     {/* Cloud on left - positioned behind corner */}
     <img src="/cloud2.png" alt=""
       className="absolute -left-12 -top-12 w-50 opacity-50 pointer-events-none" />
-    {/* Cloud on right */}
-    <img src="/cloud3.png" alt=""
-      className="absolute -right-8 top-1/4 w-20 opacity-45 pointer-events-none" />
-    {/* Left airplane - 15% bigger (w-16 from w-14) and on the corner */}
+    {/* Switched: Airplane on right top area (was cloud) */}
     <img src="/PP01.png" alt=""
+      className="absolute -right-6 top-1/4 w-14 opacity-55 pointer-events-none" />
+    {/* Left airplane on the corner */}
+    <img src="/PP02.png" alt=""
       className="absolute -left-5 -bottom-6 w-16 opacity-70 pointer-events-none" />
-    {/* Right airplane - moved up by 13px (bottom-1 from -bottom-2) */}
-    <img src="/PP03.png" alt=""
-      className="absolute -right-7 bottom-1 w-16 opacity-60 pointer-events-none" />
+    {/* Switched: Cloud on right bottom (was airplane) */}
+    <img src="/cloud3.png" alt=""
+      className="absolute -right-8 bottom-0 w-20 opacity-50 pointer-events-none" />
   </>
 )
 
