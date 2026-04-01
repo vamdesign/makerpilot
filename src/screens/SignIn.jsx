@@ -35,15 +35,16 @@ const BackgroundDecor = () => (
     {/* Bottom cloud - bigger and moved slightly left but still on right */}
     <img src="/cloud1.png" alt=""
       className="absolute right-4 bottom-36 w-40 opacity-45 pointer-events-none" />
-    {/* Bottom left cloud and plane - moved up for better balance */}
+    {/* Bottom left cloud */}
     <img src="/cloud2.png" alt=""
       className="absolute left-4 bottom-28 w-28 opacity-40 pointer-events-none" />
+    {/* Bottom left plane - moved down and right to not overlap cloud, different horizon than right plane */}
     <img src="/PP04.png" alt=""
-      className="absolute left-12 bottom-32 w-12 opacity-65 pointer-events-none" />
+      className="absolute left-20 bottom-12 w-12 opacity-65 pointer-events-none" />
 
-    {/* Paper airplanes - top area */}
+    {/* Paper airplanes - top area - right plane moved UP to break horizontal alignment */}
     <img src="/PP04.png" alt=""
-      className="absolute -right-4 top-28 w-16 opacity-75 pointer-events-none" />
+      className="absolute -right-4 top-20 w-16 opacity-75 pointer-events-none" />
     {/* Top left plane */}
     <img src="/PP02.png" alt=""
       className="absolute left-2 top-36 w-14 opacity-65 pointer-events-none" />
@@ -66,9 +67,9 @@ const CardBackgroundDecor = () => (
     {/* Left airplane on the corner */}
     <img src="/PP02.png" alt=""
       className="absolute -left-5 -bottom-6 w-16 opacity-70 pointer-events-none" />
-    {/* Switched: Cloud on right bottom (was airplane) */}
+    {/* Cloud on right - moved UP so not on same horizon as left plane */}
     <img src="/cloud3.png" alt=""
-      className="absolute -right-8 bottom-0 w-20 opacity-50 pointer-events-none" />
+      className="absolute -right-8 bottom-8 w-20 opacity-50 pointer-events-none" />
   </>
 )
 
