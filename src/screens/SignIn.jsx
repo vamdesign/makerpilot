@@ -23,25 +23,47 @@ const EyeClosed = () => (
 // ── Background decoration with paper airplanes and clouds ────────
 const BackgroundDecor = () => (
   <>
-    {/* Clouds */}
+    {/* Clouds - scattered around */}
     <img src="/cloud1.png" alt="" 
-         className="absolute -left-8 top-24 w-32 opacity-70 pointer-events-none" />
+         className="absolute -left-6 top-20 w-28 opacity-60 pointer-events-none" />
     <img src="/cloud2.png" alt="" 
-         className="absolute right-4 top-16 w-20 opacity-60 pointer-events-none" />
+         className="absolute right-2 top-12 w-24 opacity-50 pointer-events-none" />
     <img src="/cloud3.png" alt="" 
-         className="absolute -left-4 bottom-32 w-24 opacity-50 pointer-events-none" />
+         className="absolute -left-4 bottom-40 w-20 opacity-45 pointer-events-none" />
+    <img src="/cloud1.png" alt="" 
+         className="absolute right-0 bottom-24 w-24 opacity-40 pointer-events-none" />
+    <img src="/cloud2.png" alt="" 
+         className="absolute left-1/4 top-8 w-16 opacity-35 pointer-events-none" />
+    <img src="/cloud3.png" alt="" 
+         className="absolute right-1/4 bottom-12 w-18 opacity-30 pointer-events-none" />
     
-    {/* Paper airplanes */}
+    {/* Paper airplanes - top area */}
     <img src="/PP01.png" alt="" 
-         className="absolute right-0 top-40 w-20 opacity-80 pointer-events-none" />
+         className="absolute right-2 top-32 w-14 opacity-75 pointer-events-none" />
     <img src="/PP02.png" alt="" 
-         className="absolute -left-4 top-1/3 w-16 opacity-70 pointer-events-none" />
+         className="absolute -left-2 top-36 w-12 opacity-65 pointer-events-none" />
+    
+    {/* Paper airplanes - bottom corners (smaller) */}
     <img src="/PP03.png" alt="" 
-         className="absolute right-8 bottom-48 w-14 opacity-75 pointer-events-none" />
+         className="absolute right-4 bottom-36 w-10 opacity-70 pointer-events-none" />
     <img src="/PP04.png" alt="" 
-         className="absolute left-4 bottom-20 w-18 opacity-65 pointer-events-none" />
+         className="absolute left-2 bottom-16 w-8 opacity-55 pointer-events-none" />
     <img src="/PP05.png" alt="" 
-         className="absolute right-2 bottom-16 w-12 opacity-60 pointer-events-none" />
+         className="absolute right-8 bottom-8 w-8 opacity-50 pointer-events-none" />
+  </>
+)
+
+// ── Decorations behind the white card for depth ──────────────────
+const CardBackgroundDecor = () => (
+  <>
+    <img src="/cloud2.png" alt="" 
+         className="absolute -left-6 top-1/4 w-16 opacity-40 pointer-events-none" />
+    <img src="/cloud3.png" alt="" 
+         className="absolute -right-4 top-1/3 w-14 opacity-35 pointer-events-none" />
+    <img src="/PP01.png" alt="" 
+         className="absolute -left-3 bottom-8 w-10 opacity-50 pointer-events-none" />
+    <img src="/PP03.png" alt="" 
+         className="absolute -right-2 bottom-4 w-8 opacity-45 pointer-events-none" />
   </>
 )
 
@@ -96,8 +118,10 @@ export default function SignIn() {
           Sign in to your account
         </p>
 
-        {/* White rounded card for form */}
-        <div className="bg-white rounded-2xl shadow-sm p-6">
+        {/* White rounded card for form with background decorations */}
+        <div className="relative">
+          <CardBackgroundDecor />
+          <div className="relative bg-white rounded-2xl shadow-sm p-6">
           {/* Form */}
           <div className="flex flex-col gap-4 mb-2">
 
@@ -162,6 +186,7 @@ export default function SignIn() {
           >
             Forgot password?
           </button>
+          </div>
         </div>
 
         {/* Sign up link */}
