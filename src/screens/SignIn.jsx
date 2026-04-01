@@ -20,15 +20,64 @@ const EyeClosed = () => (
   </svg>
 )
 
-// ── Background accent (minimal) ──────────────────────────────────
-const Accent = () => (
-  <svg style={{ position:'absolute', inset:0, width:'100%', height:'100%', zIndex:0 }}
-       viewBox="0 0 390 844" fill="none" preserveAspectRatio="xMidYMid slice">
-    <ellipse cx="-20" cy="100" rx="120" ry="100" fill="#1A9E8F" opacity="0.08" />
-    <ellipse cx="420" cy="760" rx="110" ry="90" fill="#C2590A" opacity="0.07" />
-    <circle cx="350" cy="120" r="40" fill="#9FE1CB" opacity="0.12" />
-    <circle cx="55" cy="680" r="30" fill="#9FE1CB" opacity="0.10" />
-  </svg>
+// ── Background decoration with paper airplanes and clouds ────────
+const BackgroundDecor = () => (
+  <>
+    {/* Clouds - scattered around */}
+    {/* top big cloud */}
+    <img src="/cloud1.png" alt=""
+      className="absolute -left-6 top-18 w-42 opacity-60 pointer-events-none" />
+    <img src="/cloud2.png" alt=""
+      className="absolute right-2 top-30 w-24 opacity-50 pointer-events-none" />
+    {/* top small middle cloud */}
+    <img src="/cloud3.png" alt=""
+      className="absolute right-20 top-43 w-16 opacity-35 pointer-events-none" />
+    {/* Bottom clouds */}
+    <img src="/cloud1.png" alt=""
+      className="absolute right-12 bottom-40 w-32 opacity-45 pointer-events-none" />
+    <img src="/cloud2.png" alt=""
+      className="absolute left-8 bottom-16 w-28 opacity-40 pointer-events-none" />
+    <img src="/cloud3.png" alt=""
+      className="absolute right-4 bottom-12 w-24 opacity-35 pointer-events-none" />
+
+    {/* Paper airplanes - top area */}
+    <img src="/PP04.png" alt=""
+      className="absolute -right-4 top-28 w-16 opacity-75 pointer-events-none" />
+    {/* Top left plane - 12% bigger (w-14 from w-12) and not off page (left-2 instead of -left-2) */}
+    <img src="/PP02.png" alt=""
+      className="absolute left-2 top-36 w-14 opacity-65 pointer-events-none" />
+
+    {/* Paper airplanes - bottom area */}
+    <img src="/PP03.png" alt=""
+      className="absolute right-6 bottom-28 w-14 opacity-70 pointer-events-none" />
+    {/* Bottom left plane - moved up */}
+    <img src="/PP05.png" alt=""
+      className="absolute left-8 bottom-40 w-16 opacity-65 pointer-events-none" />
+    {/* Bottom left plane - moved down and rotated 45 degrees right */}
+    <img src="/PP04.png" alt=""
+      className="absolute left-12 bottom-8 w-14 opacity-60 pointer-events-none"
+      style={{ transform: 'rotate(45deg)' }} />
+    <img src="/PP01.png" alt=""
+      className="absolute right-16 bottom-4 w-14 opacity-55 pointer-events-none" />
+  </>
+)
+
+// ── Decorations behind the white card for depth ──────────────────
+const CardBackgroundDecor = () => (
+  <>
+    {/* Cloud on left - positioned behind corner */}
+    <img src="/cloud2.png" alt=""
+      className="absolute -left-12 -top-12 w-50 opacity-50 pointer-events-none" />
+    {/* Cloud on right */}
+    <img src="/cloud3.png" alt=""
+      className="absolute -right-8 top-1/4 w-20 opacity-45 pointer-events-none" />
+    {/* Left airplane - 15% bigger (w-16 from w-14) and on the corner */}
+    <img src="/PP01.png" alt=""
+      className="absolute -left-5 -bottom-6 w-16 opacity-70 pointer-events-none" />
+    {/* Right airplane - moved up by 13px (bottom-1 from -bottom-2) */}
+    <img src="/PP03.png" alt=""
+      className="absolute -right-7 bottom-1 w-16 opacity-60 pointer-events-none" />
+  </>
 )
 
 // ── Sign In Screen ───────────────────────────────────────────────
@@ -49,13 +98,13 @@ export default function SignIn() {
   }
 
   return (
-    <div style={{ position:'relative', minHeight:'100vh', background:'#FAFAF8', overflow:'hidden' }}
-         className="flex flex-col">
+    <div style={{ position: 'relative', minHeight: '100vh', background: '#FAFAF8', overflow: 'hidden' }}
+      className="flex flex-col">
 
-      <Accent />
+      <BackgroundDecor />
 
-      <div style={{ position:'relative', zIndex:1 }}
-           className="flex flex-col flex-1 px-6 pt-16 pb-10">
+      <div style={{ position: 'relative', zIndex: 1 }}
+        className="flex flex-col flex-1 px-6 pt-16 pb-10">
 
         {/* Back arrow */}
         <button
@@ -71,7 +120,7 @@ export default function SignIn() {
         {/* Logo */}
         <div className="flex justify-center mb-8">
           <img src="/MakerPilot_Logo.png" alt="MakerPilot"
-               style={{ height:'40px', width:'auto', objectFit:'contain' }} />
+            style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
         </div>
 
         {/* Heading */}
@@ -82,91 +131,76 @@ export default function SignIn() {
           Sign in to your account
         </p>
 
-        {/* Form */}
-        <div className="flex flex-col gap-4 mb-2">
+        {/* White rounded card for form with background decorations */}
+        <div className="relative">
+          <CardBackgroundDecor />
+          <div className="relative bg-white shadow-sm p-6" style={{ borderRadius: '10px' }}>
+            {/* Form */}
+            <div className="flex flex-col gap-4 mb-2">
 
-          {/* Email */}
-          <div>
-            <label className="text-xs font-medium text-gray-500 mb-1.5 block">
-              Email address
-            </label>
-            <input
-              type="email"
-              className="input"
-              placeholder="you@example.com"
-              value={email}
-              onChange={e => { setEmail(e.target.value); setError('') }}
-              autoComplete="email"
-            />
-          </div>
+              {/* Email */}
+              <div>
+                <label className="text-xs font-medium text-gray-500 mb-1.5 block">
+                  Email address
+                </label>
+                <input
+                  type="email"
+                  className="input"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={e => { setEmail(e.target.value); setError('') }}
+                  autoComplete="email"
+                />
+              </div>
 
-          {/* Password */}
-          <div>
-            <label className="text-xs font-medium text-gray-500 mb-1.5 block">
-              Password
-            </label>
-            <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                className="input pr-12"
-                placeholder="••••••••"
-                value={password}
-                onChange={e => { setPassword(e.target.value); setError('') }}
-                autoComplete="current-password"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(s => !s)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1
-                           rounded-lg hover:bg-gray-100 transition-colors"
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-              >
-                {showPassword ? <EyeClosed /> : <EyeOpen />}
-              </button>
+              {/* Password */}
+              <div>
+                <label className="text-xs font-medium text-gray-500 mb-1.5 block">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    className="input pr-12"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={e => { setPassword(e.target.value); setError('') }}
+                    autoComplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(s => !s)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1
+                             rounded-lg hover:bg-gray-100 transition-colors"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeClosed /> : <EyeOpen />}
+                  </button>
+                </div>
+              </div>
+
             </div>
+
+            {/* Error */}
+            {error && (
+              <p className="text-xs text-critical mb-4 text-center">{error}</p>
+            )}
+
+            {/* Sign in button */}
+            <button className="btn-primary mt-4 w-full" onClick={handleSignIn}>
+              Sign in
+            </button>
+
+            {/* Forgot password */}
+            <button
+              onClick={() => { }} // TODO: forgot password flow
+              className="w-full text-center text-sm font-medium text-teal hover:text-teal-dark
+                       transition-colors mt-4"
+            >
+              Forgot password?
+            </button>
           </div>
-
-          {/* Forgot password */}
-          <button
-            onClick={() => {}} // TODO: forgot password flow
-            className="self-end text-xs font-medium text-teal hover:text-teal-dark
-                       transition-colors -mt-1"
-          >
-            Forgot password?
-          </button>
-
         </div>
-
-        {/* Error */}
-        {error && (
-          <p className="text-xs text-critical mb-4 text-center">{error}</p>
-        )}
-
-        {/* Sign in button */}
-        <button className="btn-primary mt-4" onClick={handleSignIn}>
-          Sign in
-        </button>
-
-        {/* Divider */}
-        <div className="flex items-center gap-3 my-6">
-          <div className="flex-1 h-px bg-gray-100" />
-          <span className="text-xs text-gray-400">or</span>
-          <div className="flex-1 h-px bg-gray-100" />
-        </div>
-
-        {/* Google sign in */}
-        <button
-          className="btn-secondary flex items-center justify-center gap-2"
-          onClick={() => navigate('/home')}
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24">
-            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-          </svg>
-          Continue with Google
-        </button>
 
         {/* Sign up link */}
         <p className="text-center text-sm text-gray-400 mt-8">
