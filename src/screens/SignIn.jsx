@@ -50,17 +50,15 @@ const BackgroundDecor = () => (
     {/* Paper airplanes - bottom area */}
     <img src="/PP03.png" alt=""
       className="absolute right-6 bottom-28 w-14 opacity-70 pointer-events-none" />
-    {/* Bottom left planes - moved lower */}
+    {/* Bottom left plane - moved up */}
     <img src="/PP05.png" alt=""
-      className="absolute left-8 bottom-28 w-16 opacity-65 pointer-events-none"
-      style={{ transform: 'rotate(90deg)' }} />
+      className="absolute left-8 bottom-40 w-16 opacity-65 pointer-events-none" />
+    {/* Bottom left plane - moved down and rotated 45 degrees right */}
     <img src="/PP04.png" alt=""
-      className="absolute left-16 bottom-20 w-14 opacity-60 pointer-events-none" />
+      className="absolute left-12 bottom-8 w-14 opacity-60 pointer-events-none"
+      style={{ transform: 'rotate(45deg)' }} />
     <img src="/PP01.png" alt=""
       className="absolute right-16 bottom-4 w-14 opacity-55 pointer-events-none" />
-    {/* Bottom right cloud - 20% bigger (w-32 from w-24) and moved 2px left */}
-    <img src="/cloud1.png" alt=""
-      className="absolute right-10 bottom-24 w-32 opacity-45 pointer-events-none" />
   </>
 )
 
