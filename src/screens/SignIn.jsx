@@ -32,8 +32,8 @@ const BackgroundDecor = () => (
     {/* top small middle cloud */}
     <img src="/cloud3.png" alt=""
       className="absolute right-20 top-43 w-16 opacity-35 pointer-events-none" />
-    {/* Bottom cloud - bigger and moved slightly left but still on right */}
-    <img src="/cloud1.png" alt=""
+    {/* Bottom cloud - using cloud4 for variety */}
+    <img src="/cloud4.png" alt=""
       className="absolute right-4 bottom-36 w-40 opacity-45 pointer-events-none" />
     {/* Bottom left cloud */}
     <img src="/cloud2.png" alt=""
