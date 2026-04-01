@@ -40,23 +40,27 @@ const BackgroundDecor = () => (
     <img src="/cloud3.png" alt=""
       className="absolute right-4 bottom-12 w-24 opacity-35 pointer-events-none" />
 
-    {/* Paper airplanes - top area - use PP04 (different style) moved right off screen */}
+    {/* Paper airplanes - top area */}
     <img src="/PP04.png" alt=""
       className="absolute -right-4 top-28 w-16 opacity-75 pointer-events-none" />
+    {/* Top left plane - 12% bigger (w-14 from w-12) and not off page (left-2 instead of -left-2) */}
     <img src="/PP02.png" alt=""
-      className="absolute -left-2 top-36 w-12 opacity-65 pointer-events-none" />
+      className="absolute left-2 top-36 w-14 opacity-65 pointer-events-none" />
 
     {/* Paper airplanes - bottom area */}
     <img src="/PP03.png" alt=""
       className="absolute right-6 bottom-28 w-14 opacity-70 pointer-events-none" />
-    {/* Bottom left - pointing down plane (use PP05 rotated via style) */}
+    {/* Bottom left planes - moved lower */}
     <img src="/PP05.png" alt=""
-      className="absolute left-6 bottom-44 w-16 opacity-65 pointer-events-none"
+      className="absolute left-8 bottom-28 w-16 opacity-65 pointer-events-none"
       style={{ transform: 'rotate(90deg)' }} />
     <img src="/PP04.png" alt=""
-      className="absolute left-4 bottom-8 w-14 opacity-60 pointer-events-none" />
+      className="absolute left-16 bottom-20 w-14 opacity-60 pointer-events-none" />
     <img src="/PP01.png" alt=""
       className="absolute right-16 bottom-4 w-14 opacity-55 pointer-events-none" />
+    {/* Bottom right cloud - 20% bigger (w-32 from w-24) and moved 2px left */}
+    <img src="/cloud1.png" alt=""
+      className="absolute right-10 bottom-24 w-32 opacity-45 pointer-events-none" />
   </>
 )
 
@@ -65,16 +69,16 @@ const CardBackgroundDecor = () => (
   <>
     {/* Cloud on left - positioned behind corner */}
     <img src="/cloud2.png" alt=""
-      className="absolute -left-12 -top-6 w-32 opacity-50 pointer-events-none" />
-    {/* Cloud on right - 20% bigger (w-24 instead of w-20) */}
+      className="absolute -left-12 -top-12 w-50 opacity-50 pointer-events-none" />
+    {/* Cloud on right */}
     <img src="/cloud3.png" alt=""
-      className="absolute -right-8 top-1/4 w-24 opacity-45 pointer-events-none" />
-    {/* Left airplane - more visible, coming off bottom corner */}
-    <img src="/PP02.png" alt=""
-      className="absolute -left-6 -bottom-4 w-16 opacity-70 pointer-events-none" />
-    {/* Right airplane - moved right, 10% bigger (w-16 instead of w-14) */}
+      className="absolute -right-8 top-1/4 w-20 opacity-45 pointer-events-none" />
+    {/* Left airplane - 15% bigger (w-16 from w-14) and on the corner */}
+    <img src="/PP01.png" alt=""
+      className="absolute -left-5 -bottom-6 w-16 opacity-70 pointer-events-none" />
+    {/* Right airplane - moved up by 13px (bottom-1 from -bottom-2) */}
     <img src="/PP03.png" alt=""
-      className="absolute -right-6 -bottom-2 w-16 opacity-60 pointer-events-none" />
+      className="absolute -right-7 bottom-1 w-16 opacity-60 pointer-events-none" />
   </>
 )
 
