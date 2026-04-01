@@ -38,8 +38,8 @@ const BackgroundDecor = () => (
     {/* Bottom left cloud and plane - moved up for better balance */}
     <img src="/cloud2.png" alt=""
       className="absolute left-4 bottom-28 w-28 opacity-40 pointer-events-none" />
-    <img src="/PP05.png" alt=""
-      className="absolute left-10 bottom-32 w-14 opacity-65 pointer-events-none" />
+    <img src="/PP04.png" alt=""
+      className="absolute left-12 bottom-32 w-12 opacity-65 pointer-events-none" />
 
     {/* Paper airplanes - top area */}
     <img src="/PP04.png" alt=""
