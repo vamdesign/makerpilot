@@ -3,6 +3,8 @@ import Welcome from './screens/Welcome'
 import SignIn from './screens/SignIn'
 import SignUp from './screens/SignUp'
 import Home from './screens/Home'
+import BusinessType from './screens/BusinessType'
+import OnboardingQuiz from './screens/OnboardingQuiz'
 
 const IconHome = ({ active }) => (
   <svg width="22" height="22" fill="none" viewBox="0 0 24 24">
@@ -98,7 +100,9 @@ export default function App() {
           <Route path="/record"        element={<Placeholder title="Record Sale" />} />
           <Route path="/plan"          element={<Placeholder title="Plan" />} />
           <Route path="/settings"      element={<Placeholder title="Settings" />} />
-          <Route path="/business-type" element={<Placeholder title="Business Type" />} />
+          <Route path="/business-type" element={<BusinessType />} />
+          <Route path="/quiz"          element={<OnboardingQuiz />} />
+          
         </Routes>
         <BottomNav />
       </div>
