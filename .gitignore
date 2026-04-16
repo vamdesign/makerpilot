@@ -1,3 +1,5 @@
 node_modules
 .DS_Store
 dist
+v0_backup/
+b_*/
