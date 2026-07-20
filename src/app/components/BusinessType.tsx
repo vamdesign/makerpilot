@@ -107,7 +107,7 @@ export default function BusinessType() {
 
                 {/* Text - centered */}
                 <div className="text-center">
-                  <h3 className="font-['DM_Sans:Bold',sans-serif] text-[16px] text-black mb-1">
+                  <h3 className="font-['DM_Sans:Bold',sans-serif] text-[16px] text-[#373737] mb-1">
                     {channel.title}
                   </h3>
                   <p className="font-['DM_Sans:Regular',sans-serif] text-[14px] text-gray-500">

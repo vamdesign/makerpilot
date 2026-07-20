@@ -70,7 +70,7 @@ export default function OnlineShopSync() {
             onClick={() => setSelectedPlatform('shopify')}
             className={`flex-1 py-2 rounded-full font-['DM_Sans:SemiBold',sans-serif] text-[14px] ${
               selectedPlatform === 'shopify'
-                ? 'bg-white text-black shadow-sm'
+                ? 'bg-white text-[#373737] shadow-sm'
                 : 'bg-transparent text-gray-600'
             }`}
           >
@@ -80,7 +80,7 @@ export default function OnlineShopSync() {
             onClick={() => setSelectedPlatform('wix')}
             className={`flex-1 py-2 rounded-full font-['DM_Sans:SemiBold',sans-serif] text-[14px] ${
               selectedPlatform === 'wix'
-                ? 'bg-white text-black shadow-sm'
+                ? 'bg-white text-[#373737] shadow-sm'
                 : 'bg-transparent text-gray-600'
             }`}
           >
@@ -90,7 +90,7 @@ export default function OnlineShopSync() {
             onClick={() => setSelectedPlatform('square')}
             className={`flex-1 py-2 rounded-full font-['DM_Sans:SemiBold',sans-serif] text-[14px] ${
               selectedPlatform === 'square'
-                ? 'bg-white text-black shadow-sm'
+                ? 'bg-white text-[#373737] shadow-sm'
                 : 'bg-transparent text-gray-600'
             }`}
           >

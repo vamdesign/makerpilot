@@ -60,7 +60,7 @@ function Text() {
 function Group() {
   return (
     <div className="absolute contents left-[64px] top-[259px]">
-      <p className="absolute font-['DM_Sans:Regular',sans-serif] leading-[normal] left-[64px] not-italic text-[16px] text-black top-[259px] whitespace-nowrap">Email Address</p>
+      <p className="absolute font-['DM_Sans:Regular',sans-serif] leading-[normal] left-[64px] not-italic text-[16px] text-[#373737] top-[259px] whitespace-nowrap">Email Address</p>
       <Text />
     </div>
   );
@@ -97,7 +97,7 @@ function Group1({ showPassword }: { showPassword: boolean }) {
   return (
     <div className="absolute contents left-[64px] top-[355px]">
       <Text1 showPassword={showPassword} />
-      <p className="absolute font-['DM_Sans:Regular',sans-serif] leading-[normal] left-[64px] not-italic text-[16px] text-black top-[355px] whitespace-nowrap">Password</p>
+      <p className="absolute font-['DM_Sans:Regular',sans-serif] leading-[normal] left-[64px] not-italic text-[16px] text-[#373737] top-[355px] whitespace-nowrap">Password</p>
     </div>
   );
 }

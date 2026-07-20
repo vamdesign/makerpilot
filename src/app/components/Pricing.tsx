@@ -42,14 +42,14 @@ export default function Pricing() {
           >
             {/* Header band */}
             <div className="bg-[#F9FAFB] -mx-4 -mt-4 px-4 py-3 rounded-t-2xl mb-3 flex items-center justify-between">
-              <span className="font-['DM_Sans:Bold',sans-serif] text-[15px] text-black">Starter</span>
+              <span className="font-['DM_Sans:Bold',sans-serif] text-[15px] text-[#373737]">Starter</span>
               <span className="bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full text-[11px] font-['DM_Sans:SemiBold',sans-serif]">
                 Free forever
               </span>
             </div>
 
             {/* Price */}
-            <p className="font-['DM_Sans:Bold',sans-serif] text-[28px] text-black mb-3">$0</p>
+            <p className="font-['DM_Sans:Bold',sans-serif] text-[28px] text-[#373737] mb-3">$0</p>
 
             {/* Features */}
             <div className="space-y-1.5 mb-3">
@@ -87,7 +87,7 @@ export default function Pricing() {
           <div className="bg-white rounded-2xl border-2 border-[#1A9E8F] p-4" style={{ zIndex: 0 }}>
             {/* Header band */}
             <div className="bg-[#EAF4F2] -mx-4 -mt-4 px-4 py-3 rounded-t-2xl mb-3 flex items-center justify-between">
-              <span className="font-['DM_Sans:Bold',sans-serif] text-[15px] text-black">Maker</span>
+              <span className="font-['DM_Sans:Bold',sans-serif] text-[15px] text-[#373737]">Maker</span>
               <span className="bg-[#1A9E8F] text-white px-2 py-0.5 rounded-full text-[11px] font-['DM_Sans:SemiBold',sans-serif]">
                 Most popular
               </span>
@@ -130,7 +130,7 @@ export default function Pricing() {
           <div className="bg-white rounded-2xl border-2 border-[#534AB7] p-4" style={{ zIndex: 0 }}>
             {/* Header band */}
             <div className="bg-[#F5F3FF] -mx-4 -mt-4 px-4 py-3 rounded-t-2xl mb-3">
-              <span className="font-['DM_Sans:Bold',sans-serif] text-[15px] text-black">Studio</span>
+              <span className="font-['DM_Sans:Bold',sans-serif] text-[15px] text-[#373737]">Studio</span>
             </div>
 
             {/* Price */}
@@ -170,7 +170,7 @@ export default function Pricing() {
           <div className="bg-white rounded-2xl border-2 border-[#FF6600] p-4" style={{ zIndex: 0 }}>
             {/* Header band */}
             <div className="bg-[#FDF0E6] -mx-4 -mt-4 px-4 py-3 rounded-t-2xl mb-3">
-              <span className="font-['DM_Sans:Bold',sans-serif] text-[15px] text-black">Pilot Pro</span>
+              <span className="font-['DM_Sans:Bold',sans-serif] text-[15px] text-[#373737]">Pilot Pro</span>
             </div>
 
             {/* Price */}
