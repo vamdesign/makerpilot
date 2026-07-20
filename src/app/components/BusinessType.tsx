@@ -138,10 +138,10 @@ export default function BusinessType() {
           // Conflict state: Both Etsy and My own online shop selected
           <div className="bg-white rounded-2xl border-2 border-[#FF6600] p-4 mb-4" style={{ zIndex: 0 }}>
             <p className="font-['DM_Sans:SemiBold',sans-serif] text-[14px] text-[#CC5200] mb-2 text-center">
-              You're on the free plan — only 1 sync channel included.
+              Free plan includes 1 sync channel.
             </p>
             <p className="font-['DM_Sans:Regular',sans-serif] text-[14px] text-[#CC5200] mb-4 text-center">
-              Upgrade to Maker to connect both.
+              Upgrade to Maker to connect more.
             </p>
             <button
               onClick={() => navigate('/pricing')}

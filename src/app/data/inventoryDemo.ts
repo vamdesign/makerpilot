@@ -59,7 +59,7 @@ export const INVENTORY_DEMO_SEED: InventoryRow[] = [
     id: 2,
     title: 'Tomato Ceramic Mug Tumbler Handmade',
     price: '$36.00',
-    stock: 10,
+    stock: 3,
     alertThreshold: 5,
     leadTime: 2,
     leadTimeUnit: 'weeks',

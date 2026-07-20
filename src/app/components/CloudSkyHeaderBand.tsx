@@ -25,14 +25,26 @@ export default function CloudSkyHeaderBand({
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-x-0 top-0 z-0 bg-white"
-      style={{
-        height: bandHeight,
-        backgroundImage: `url(${baseGradient})`,
-        backgroundSize: '100% auto',
-        backgroundPosition: 'top center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    />
+      className="pointer-events-none absolute inset-x-0 top-0 z-0 overflow-hidden"
+      style={{ height: bandHeight }}
+    >
+      <div
+        className="absolute inset-0 bg-white"
+        style={{
+          backgroundImage: `url(${baseGradient})`,
+          backgroundSize: '100% auto',
+          backgroundPosition: 'top center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
+      {/* Gradient fade — blends cloud into white background */}
+      <div
+        className="absolute inset-x-0 bottom-0"
+        style={{
+          height: compact ? '60px' : '120px',
+          background: 'linear-gradient(to bottom, transparent 0%, white 100%)',
+        }}
+      />
+    </div>
   );
 }

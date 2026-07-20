@@ -22,6 +22,7 @@ import Settings from './components/Settings';
 import BottomNav from './components/BottomNav';
 import { TRACKED_INVENTORY_KEY, writeTrackedToStorage } from './inventory/trackedInventory';
 import { INVENTORY_DEMO_SEED } from './data/inventoryDemo';
+import { seedActivityLogIfEmpty } from './data/activityLog';
 
 export default function App() {
   useEffect(() => {
@@ -67,6 +68,7 @@ export default function App() {
     if (!localStorage.getItem(TRACKED_INVENTORY_KEY)) {
       writeTrackedToStorage(INVENTORY_DEMO_SEED);
     }
+    seedActivityLogIfEmpty();
   }, []);
   return (
 <BrowserRouter basename="/makerpilot">

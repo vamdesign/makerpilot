@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ChevronRight, LogOut } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import PageTitle from './PageTitle';
 
 export default function Settings() {
@@ -76,16 +76,15 @@ export default function Settings() {
             <span className="text-sm">Terms of Service</span>
             <ChevronRight size={20} className="text-gray-400" />
           </button>
-        </div>
 
-        <button
-          type="button"
-          onClick={handleLogout}
-          className="mb-6 flex w-full items-center justify-center gap-2 rounded-xl border border-[#B91C1C] bg-white py-4 text-[#B91C1C]"
-        >
-          <LogOut size={20} />
-          Log Out
-        </button>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="flex w-full p-4 text-left active:opacity-70"
+          >
+            <span className="text-sm text-[#B91C1C]">Log out</span>
+          </button>
+        </div>
 
         <p className="mb-6 text-center text-xs text-gray-400">MakerPilot v1.0.0</p>
       </div>

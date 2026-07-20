@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import PageTitle from './PageTitle';
 import { readTrackedFromStorage } from '../inventory/trackedInventory';
 import { INVENTORY_DEMO_SEED } from '../data/inventoryDemo';
@@ -57,16 +57,21 @@ export default function Home() {
     <div className="relative isolate mx-auto flex h-full min-h-0 max-w-[393px] flex-col bg-white">
       <PageTitle title="Home" compact={true} />
 
-      <div className="relative z-10 min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-24 pt-4">
+      <div className="relative z-10 min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-24 pt-12">
 
         {/* Section 1 — Needs Making / All good */}
         {needsMakingRows.length === 0 ? (
-          <p
-            className="mb-3 font-['DM_Serif_Display',serif] text-[20px] text-gray-900"
-            style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
-          >
-            Inventory up to date
-          </p>
+          <div className="mb-8">
+            <p
+              className="font-['DM_Serif_Display',serif] text-[20px] text-[#1A9E8F]"
+              style={{ fontFamily: "'DM Serif Display', Georgia, serif" }}
+            >
+              Stock levels are good!
+            </p>
+            <p className="mt-1 font-['DM_Sans:Regular',sans-serif] text-[14px] text-gray-500">
+              Nothing needs making right now
+            </p>
+          </div>
         ) : (
           <>
             <h2
@@ -91,7 +96,7 @@ export default function Home() {
                       <Thumbnail />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate font-['DM_Sans:SemiBold',sans-serif] text-[13px] text-gray-900">
+                      <p className="truncate font-['DM_Sans:SemiBold',sans-serif] text-[13px] text-[#373737]">
                         {item.title}
                       </p>
                       <p className="font-['DM_Sans:Regular',sans-serif] text-[12px] text-[#1A9E8F]">
@@ -202,7 +207,7 @@ export default function Home() {
                   }`}
                 >
                   <div className="min-w-0 flex-1">
-                    <p className="font-['DM_Sans:SemiBold',sans-serif] text-[13px] text-gray-900">
+                    <p className="font-['DM_Sans:SemiBold',sans-serif] text-[13px] text-[#373737]">
                       {event.itemTitle}
                     </p>
                     <p className="font-['DM_Sans:Regular',sans-serif] text-[12px] text-gray-500">

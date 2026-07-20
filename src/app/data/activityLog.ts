@@ -19,6 +19,67 @@ export interface ActivityEvent {
 const ACTIVITY_LOG_KEY = 'makerpilotActivityLog';
 const MAX_LOG_ENTRIES = 50; // keep last 50 events in storage
 
+const ACTIVITY_DEMO_SEED: ActivityEvent[] = [
+  {
+    id: 'demo-1',
+    type: 'sale',
+    itemId: 2,
+    itemTitle: 'Tomato Ceramic Mug Tumbler Handmade',
+    detail: 'Stock 5 → 3',
+    timestamp: Date.now() - 2 * 60 * 60 * 1000,
+  },
+  {
+    id: 'demo-2',
+    type: 'restock',
+    itemId: 6,
+    itemTitle: 'Citrus Ceramic Mug Tumbler Handmade',
+    detail: 'Stock 8 → 12',
+    timestamp: Date.now() - 5 * 60 * 60 * 1000,
+  },
+  {
+    id: 'demo-3',
+    type: 'sale',
+    itemId: 6,
+    itemTitle: 'Citrus Ceramic Mug Tumbler Handmade',
+    detail: 'Stock 10 → 8',
+    timestamp: Date.now() - 26 * 60 * 60 * 1000,
+  },
+  {
+    id: 'demo-4',
+    type: 'lead_time_changed',
+    itemId: 28,
+    itemTitle: 'Large Hand-Carved Ceramic Bowl',
+    detail: 'Lead time 2 → 3 wks',
+    timestamp: Date.now() - 48 * 60 * 60 * 1000,
+  },
+  {
+    id: 'demo-5',
+    type: 'alert_changed',
+    itemId: 2,
+    itemTitle: 'Tomato Ceramic Mug Tumbler Handmade',
+    detail: 'Alert at 3 → 5',
+    timestamp: Date.now() - 72 * 60 * 60 * 1000,
+  },
+  {
+    id: 'demo-6',
+    type: 'item_added',
+    itemId: 28,
+    itemTitle: 'Large Hand-Carved Ceramic Bowl',
+    detail: 'Added to inventory',
+    timestamp: Date.now() - 96 * 60 * 60 * 1000,
+  },
+];
+
+/** Seed demo activity when localStorage is empty (first launch / portfolio demo). */
+export function seedActivityLogIfEmpty(): void {
+  if (readActivityLog().length > 0) return;
+  try {
+    localStorage.setItem(ACTIVITY_LOG_KEY, JSON.stringify(ACTIVITY_DEMO_SEED));
+  } catch {
+    /* ignore */
+  }
+}
+
 export function readActivityLog(): ActivityEvent[] {
   try {
     const raw = localStorage.getItem(ACTIVITY_LOG_KEY);
@@ -72,7 +133,7 @@ export function eventDotColor(type: ActivityEventType): string {
 /** Icon label for each event type */
 export function eventLabel(type: ActivityEventType): string {
   switch (type) {
-    case 'sale':              return 'Sale';
+    case 'sale':              return 'Sold';
     case 'restock':           return 'Restocked';
     case 'lead_time_changed': return 'Lead time';
     case 'alert_changed':     return 'Alert';
