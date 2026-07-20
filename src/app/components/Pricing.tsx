@@ -1,41 +1,43 @@
 import { useNavigate } from 'react-router';
-import { Check, X } from 'lucide-react';
-import Group1 from '../../imports/Group1-1/Group1-27-76';
+import { Check, ChevronLeft, X } from 'lucide-react';
+import CornerPlaneMark from './CornerPlaneMark';
+import ScreenHeader from './ScreenHeader';
 import BaseLong from '../../imports/BaseLong/BaseLong';
 
 export default function Pricing() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex flex-col max-w-[430px] mx-auto relative" style={{ zIndex: 0 }}>
-      {/* Base background */}
-      <div className="absolute inset-0">
-        <BaseLong />
-      </div>
+    <div className="relative mx-auto flex h-full min-h-0 max-w-[393px] flex-col overflow-hidden">
+      <BaseLong />
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col px-6 py-12">
-        {/* Orange paper plane icon - small in top right */}
-        <div className="absolute top-6 right-6 w-[50px] h-[45px]">
-          <Group1 />
-        </div>
+      <div className="relative z-10 flex h-full min-h-0 flex-col">
+        <CornerPlaneMark />
 
-        {/* Header */}
-        <h1 className="text-center mb-2 mt-8" style={{fontFamily: "'DM Serif Display', serif"}}>
-          Plans & Pricing
-        </h1>
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="absolute top-6 left-6 z-20 flex items-center gap-2"
+        >
+          <ChevronLeft size={20} className="text-gray-700" />
+          <span className="font-['DM_Sans:Regular',sans-serif] text-[14px] text-gray-700">Back</span>
+        </button>
 
-        {/* Subhead */}
-        <p className="text-center text-gray-500 mb-8 font-['DM_Sans:Regular',sans-serif] text-[14px]">
-          Simple pricing for makers at every stage.
-        </p>
+        <ScreenHeader>
+          <h1 className="mb-2 text-center" style={{ fontFamily: "'DM Serif Display', serif" }}>
+            Plans & Pricing
+          </h1>
+          <p className="text-center font-['DM_Sans:Regular',sans-serif] text-[14px] text-gray-500">
+            Simple pricing for makers at every stage.
+          </p>
+        </ScreenHeader>
 
-        {/* Plan cards */}
-        <div className="space-y-2.5 mb-6">
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-6 pb-8">
+          {/* Plan cards */}
+          <div className="mb-6 space-y-2.5">
           {/* Starter Plan */}
           <div
-            onClick={() => navigate('/business-type')}
-            className="bg-white rounded-2xl border-2 border-gray-400 p-4 cursor-pointer"
+            className="bg-white rounded-2xl border-2 border-gray-400 p-4"
             style={{ zIndex: 0 }}
           >
             {/* Header band */}
@@ -132,7 +134,7 @@ export default function Pricing() {
             </div>
 
             {/* Price */}
-            <p className="font-['DM_Sans:Bold',sans-serif] text-[28px] text-[#534AB7] mb-3">$19/mo</p>
+            <p className="font-['DM_Sans:Bold',sans-serif] text-[28px] text-[#534AB7] mb-3">$24/mo</p>
 
             {/* Features */}
             <div className="space-y-1.5 mb-4">
@@ -172,7 +174,7 @@ export default function Pricing() {
             </div>
 
             {/* Price */}
-            <p className="font-['DM_Sans:Bold',sans-serif] text-[28px] text-[#FF6600] mb-3">$39/mo</p>
+            <p className="font-['DM_Sans:Bold',sans-serif] text-[28px] text-[#FF6600] mb-3">$59/mo</p>
 
             {/* Features */}
             <div className="space-y-1.5 mb-4">
@@ -206,9 +208,10 @@ export default function Pricing() {
         </div>
 
         {/* Bottom note */}
-        <p className="text-center font-['DM_Sans:Regular',sans-serif] text-[12px] text-gray-500 px-4">
+        <p className="px-4 text-center font-['DM_Sans:Regular',sans-serif] text-[12px] text-gray-500">
           All paid plans include a 14-day free trial. Cancel anytime.
         </p>
+        </div>
       </div>
     </div>
   );

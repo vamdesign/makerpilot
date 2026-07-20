@@ -1,19 +1,32 @@
-import svgPaths from "./svg-50p7y8ra20";
+type ChannelPlaneIconProps = {
+  className?: string;
+};
 
-export default function Pp01A() {
+export default function Pp01A({ className = 'h-9 w-auto' }: ChannelPlaneIconProps) {
   return (
-    <div className="relative size-full" data-name="PP01a">
-      <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 95 50">
-        <g clipPath="url(#clip0_29_194)" id="PP01a">
-          <path d={svgPaths.p97a9100} fill="var(--fill-0, white)" id="Vector 1" />
-          <path d={svgPaths.p8efb80} fill="var(--fill-0, #FF6600)" id="Vector 1 (Stroke)" />
-        </g>
-        <defs>
-          <clipPath id="clip0_29_194">
-            <rect fill="white" height="50" width="95" />
-          </clipPath>
-        </defs>
-      </svg>
-    </div>
+    <svg
+      className={className}
+      viewBox="0 0 95 50"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+      data-name="Pp01A"
+    >
+      <g clipPath="url(#clip_pp01)">
+        <path
+          d="M27.3143 45.178L24.5027 36.9253L0.475965 33.082L88.0998 3.00001L59.3696 46.6226L36.483 39.8048L27.3143 45.178Z"
+          fill="white"
+        />
+        <path
+          d="M59.7959 47.7928L36.613 40.8867L26.7628 46.66L23.7496 37.8176L0.317536 34.0695L0.151491 32.1365L90.547 1.10279L59.7959 47.7928ZM35.257 38.3959L57.9036 45.1428L52.7226 27.0906L35.257 38.3959ZM54.4765 25.9546L59.7299 44.2556L84.6442 6.42648L54.4765 25.9546ZM25.7225 37.4077L27.6987 43.206L32.1366 38.0813L32.2297 37.9735L32.3493 37.8955L46.7913 28.5463L45.9747 26.6035L25.7225 37.4077ZM32.0358 41.2512L33.9906 40.1055L33.2249 39.8779L32.0358 41.2512ZM24.3286 35.8846L40.5433 27.2347L6.59813 33.0483L24.3286 35.8846ZM47.7475 25.6587L48.4966 27.4422L67.6819 15.0252L47.7475 25.6587ZM12.5173 30.0055L46.1457 24.246L76.5766 8.0126L12.5173 30.0055Z"
+          fill="#FF6600"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip_pp01">
+          <rect width="95" height="50" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
   );
 }

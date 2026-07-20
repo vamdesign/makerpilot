@@ -35,10 +35,10 @@ export default function TermsModal({ isOpen, onClose }: TermsModalProps) {
         <div className="bg-white rounded-2xl shadow-2xl max-w-[430px] w-full mx-auto" style={{ height: '85vh', animation: 'fadeIn 0.3s ease-out' }}>
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
-            <h2 className="font-['DM_Sans:Bold',sans-serif] font-bold text-[20px] text-black">Terms & Conditions</h2>
+            <h2 className="font-['DM_Sans:Bold',sans-serif] font-bold text-[20px] text-[#373737]">Terms & Conditions</h2>
             <button
               onClick={onClose}
-              className="text-gray-500 transition-colors"
+              className="text-gray-500"
             >
               <X size={24} />
             </button>
@@ -56,7 +56,7 @@ export default function TermsModal({ isOpen, onClose }: TermsModalProps) {
 
             <div className="space-y-5">
               <div>
-                <h3 className="font-['DM_Sans:Bold',sans-serif] font-bold text-[16px] text-[#000000] mb-2">
+                <h3 className="font-['DM_Sans:Bold',sans-serif] font-bold text-[16px] text-[#373737] mb-2">
                   Your account
                 </h3>
                 <p className="font-['DM_Sans:Regular',sans-serif] text-[16px] text-gray-800 leading-relaxed">
@@ -65,7 +65,7 @@ export default function TermsModal({ isOpen, onClose }: TermsModalProps) {
               </div>
 
               <div>
-                <h3 className="font-['DM_Sans:Bold',sans-serif] font-bold text-[16px] text-[#000000] mb-2">
+                <h3 className="font-['DM_Sans:Bold',sans-serif] font-bold text-[16px] text-[#373737] mb-2">
                   Your data
                 </h3>
                 <p className="font-['DM_Sans:Regular',sans-serif] text-[16px] text-gray-800 leading-relaxed">
@@ -74,7 +74,7 @@ export default function TermsModal({ isOpen, onClose }: TermsModalProps) {
               </div>
 
               <div>
-                <h3 className="font-['DM_Sans:Bold',sans-serif] font-bold text-[16px] text-[#000000] mb-2">
+                <h3 className="font-['DM_Sans:Bold',sans-serif] font-bold text-[16px] text-[#373737] mb-2">
                   Subscriptions
                 </h3>
                 <p className="font-['DM_Sans:Regular',sans-serif] text-[16px] text-gray-800 leading-relaxed">
@@ -83,7 +83,7 @@ export default function TermsModal({ isOpen, onClose }: TermsModalProps) {
               </div>
 
               <div>
-                <h3 className="font-['DM_Sans:Bold',sans-serif] font-bold text-[16px] text-[#000000] mb-2">
+                <h3 className="font-['DM_Sans:Bold',sans-serif] font-bold text-[16px] text-[#373737] mb-2">
                   Fair use
                 </h3>
                 <p className="font-['DM_Sans:Regular',sans-serif] text-[16px] text-gray-800 leading-relaxed">
@@ -92,7 +92,7 @@ export default function TermsModal({ isOpen, onClose }: TermsModalProps) {
               </div>
 
               <div>
-                <h3 className="font-['DM_Sans:Bold',sans-serif] font-bold text-[16px] text-[#000000] mb-2">
+                <h3 className="font-['DM_Sans:Bold',sans-serif] font-bold text-[16px] text-[#373737] mb-2">
                   Disclaimers
                 </h3>
                 <p className="font-['DM_Sans:Regular',sans-serif] text-[16px] text-gray-800 leading-relaxed">
@@ -101,7 +101,7 @@ export default function TermsModal({ isOpen, onClose }: TermsModalProps) {
               </div>
 
               <div>
-                <h3 className="font-['DM_Sans:Bold',sans-serif] font-bold text-[16px] text-[#000000] mb-2">
+                <h3 className="font-['DM_Sans:Bold',sans-serif] font-bold text-[16px] text-[#373737] mb-2">
                   Changes
                 </h3>
                 <p className="font-['DM_Sans:Regular',sans-serif] text-[16px] text-gray-800 leading-relaxed">

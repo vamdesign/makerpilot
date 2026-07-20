@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MakerPilot — Content Plan v1</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, system-ui, sans-serif;
+    font-size: 14px;
+    color: #1a1a1a;
+    background: #f5f5f3;
+    padding: 40px 24px 80px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+
+  /* Doc header */
+  .doc-header { margin-bottom: 40px; }
+  .doc-header h1 { font-size: 22px; font-weight: 700; color: #007EA7; margin-bottom: 4px; }
+  .doc-header p { font-size: 13px; color: #888; }
+
+  /* Legend */
+  .legend {
+    display: flex; gap: 16px; flex-wrap: wrap;
+    background: white; border: 1px solid #e5e5e5;
+    border-radius: 8px; padding: 12px 16px;
+    margin-bottom: 32px; font-size: 12px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  /* Section card */
+  .section-card {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .section-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 20px;
+    border-bottom: 1px solid #f0f0f0;
+    background: #fafafa;
+  }
+  .section-num {
+    background: #007EA7;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+  .section-status {
+    margin-left: auto;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 8px; border-radius: 4px;
+  }
+  .status-rewrite { background: #FFF3EB; color: #b85c00; }
+  .status-keep    { background: #f0f0f0; color: #666; }
+  .status-new     { background: #E5F5F3; color: #0F6E56; }
+  .status-trim    { background: #FEF3C7; color: #92400E; }
+  .status-fix     { background: #FEE2E2; color: #991B1B; }
+
+  .section-body { padding: 16px 20px; }
+
+  /* Change flags */
+  .change, .keep, .cut, .add {
+    font-size: 12px;
+    padding: 7px 12px;
+    border-radius: 4px;
+    margin: 6px 0 10px;
+    line-height: 1.5;
+  }
+  .change { background: #FFF7ED; border-left: 3px solid #FF6600; color: #7A3700; }
+  .keep   { background: #f5f5f5; border-left: 3px solid #ccc; color: #555; }
+  .cut    { background: #FEF2F2; border-left: 3px solid #B91C1C; color: #7F1D1D; }
+  .add    { background: #E5F5F3; border-left: 3px solid #1A9E8F; color: #0F6E56; }
+
+  /* Content blocks */
+  .label {
+    font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    color: #9CA3AF;
+    margin: 14px 0 4px;
+  }
+  .label:first-of-type { margin-top: 0; }
+
+  .copy-block {
+    font-size: 13px;
+    color: #374151;
+    line-height: 1.75;
+    padding: 10px 14px;
+    background: #FAFAFA;
+    border: 1px solid #f0f0f0;
+    border-radius: 6px;
+    margin-bottom: 4px;
+  }
+  .copy-block.draft { border-left: 3px solid #007EA7; background: #F0FAFE; }
+  .copy-block.note  { background: #FFFBEB; border: 1px solid #FDE68A; color: #78350F; font-style: italic; }
+
+  .copy-block ul, .copy-block ol { padding-left: 18px; }
+  .copy-block li { margin: 4px 0; }
+  .copy-block strong { font-weight: 600; color: #1a1a1a; }
+
+  /* Pill strip */
+  .pill-strip { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0; }
+  .pill {
+    font-size: 11px; font-weight: 600;
+    background: #E6F4F1; color: #0F6E56;
+    padding: 4px 10px; border-radius: 4px;
+  }
+  .pill span { color: #1a1a1a; font-weight: 400; margin-left: 4px; }
+
+  /* Divider */
+  .divider { border: none; border-top: 1px solid #f0f0f0; margin: 12px 0; }
+
+  /* KPI grid */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin: 8px 0; }
+  .kpi-card { background: #F0FAFE; border: 1px solid #B2D9E8; border-radius: 6px; padding: 10px 12px; }
+  .kpi-stat { font-size: 20px; font-weight: 700; color: #007EA7; }
+  .kpi-label { font-size: 11px; font-weight: 600; color: #2C3D4D; margin-top: 2px; }
+  .kpi-note { font-size: 11px; color: #9CA3AF; margin-top: 2px; }
+
+  /* Screen cards */
+  .screen-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin: 8px 0; }
+  .screen-card { background: #f5f5f3; border: 1px solid #e5e5e5; border-radius: 6px; padding: 10px 12px; }
+  .screen-name { font-size: 12px; font-weight: 700; color: #2C3D4D; margin-bottom: 2px; }
+  .screen-desc { font-size: 11px; color: #6B7280; line-height: 1.5; }
+
+  /* Card previews */
+  .card-preview { background: #f5f5f3; border: 1px solid #e5e5e5; border-radius: 6px; padding: 10px 14px; margin: 4px 0; }
+  .card-preview-title { font-size: 12px; font-weight: 700; color: #007EA7; margin-bottom: 3px; }
+  .card-preview-body { font-size: 12px; color: #555; line-height: 1.6; }
+
+  /* Skill columns */
+  .skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 8px 0; }
+  .skills-col { background: #fafafa; border: 1px solid #e5e5e5; border-radius: 6px; padding: 12px 14px; }
+  .skills-col-title { font-size: 11px; font-weight: 700; color: #007EA7; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .skills-col ul { padding-left: 14px; }
+  .skills-col li { font-size: 12px; color: #374151; margin: 4px 0; }
+  .skills-col li.new { color: #0F6E56; font-weight: 600; }
+
+  /* Review checkbox */
+  .review-row { display: flex; align-items: center; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid #f0f0f0; }
+  .review-row label { font-size: 12px; color: #9CA3AF; font-style: italic; }
+  input[type="checkbox"] { accent-color: #007EA7; width: 14px; height: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="doc-header">
+    <h1>MakerPilot — Content Plan v1</h1>
+    <p>Reference document for portfolio page rewrite — vamdesign.com/lab/makerpilot &nbsp;|&nbsp; Session 6 &nbsp;|&nbsp; June 2026</p>
+  </div>
+
+  <div class="legend">
+    <strong style="font-size:12px; color:#555;">Key:</strong>
+    <div class="legend-item"><div class="dot" style="background:#FF6600"></div> Change / rewrite</div>
+    <div class="legend-item"><div class="dot" style="background:#1A9E8F"></div> New content</div>
+    <div class="legend-item"><div class="dot" style="background:#ccc"></div> Keep as-is</div>
+    <div class="legend-item"><div class="dot" style="background:#B91C1C"></div> Cut</div>
+    <div class="legend-item"><div class="dot" style="background:#F59E0B"></div> Trim / reduce</div>
+  </div>
+
+
+  <!-- ─── SECTION 1: HERO ─── -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Hero</div>
+      <div class="section-status status-rewrite">Rewrite</div>
+    </div>
+    <div class="section-body">
+      <div class="change">Changes: add meta strip below H1, rewrite intro paragraph, move built-with credit here from prototype section</div>
+
+      <div class="label">H1 — keep as-is</div>
+      <div class="copy-block">Inventory management for independent makers</div>
+
+      <div class="label">Meta strip — new</div>
+      <div class="pill-strip">
+        <div class="pill">Role <span>UX Designer + Front-End Developer</span></div>
+        <div class="pill">Timeline <span>3 months</span></div>
+        <div class="pill">Platform <span>iOS-first mobile</span></div>
+        <div class="pill">Stack <span>Vite, React, TypeScript, Tailwind</span></div>
+      </div>
+
+      <div class="label">Intro paragraph — rewrite</div>
+      <div class="copy-block draft">
+        Independent makers sell across Etsy, craft shows, and local stockists. Production takes weeks. Most track inventory in a spreadsheet, a notes app, or not at all. I've experienced that problem across multiple sales channels myself — the spreadsheet that gets ignored at a show, the online listing that doesn't reflect what actually sold. MakerPilot is what I built to fix it: a mobile-first app that captures sales in seconds, tracks lead times, and tells you what to make before you run out.
+      </div>
+
+      <div class="label">Built-with credit — move here from Live Demo section</div>
+      <div class="copy-block note">Built with Cursor, Claude Code, Figma Make, and Figma.</div>
+
+      <div class="review-row">
+        <input type="checkbox" id="s1-approved">
+        <label for="s1-approved">Section approved — ready to build</label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─── SECTION 2: LIVE DEMO ─── -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Live Demo</div>
+      <div class="section-status status-rewrite">Rewrite</div>
+    </div>
+    <div class="section-body">
+      <div class="change">Rename "Live Prototype" → "Live Demo". Shorten left column significantly. Remove the "What MakerPilot does" description block — that story is told by the sections that follow.</div>
+      <div class="cut">Cut: the 5-paragraph "What MakerPilot does" description. Redundant once the section order puts story before demo.</div>
+
+      <div class="label">H2</div>
+      <div class="copy-block">Live Demo</div>
+
+      <div class="label">Intro — short, direct</div>
+      <div class="copy-block draft">
+        This is a working app. The demo loads with seed inventory data so you can explore the full experience without signing up.
+      </div>
+
+      <div class="label">Try these interactions:</div>
+      <div class="copy-block draft">
+        <ul>
+          <li>Tap an item in the Needs Making strip to see lead time in action</li>
+          <li>Record a sale and watch stock update instantly</li>
+          <li>Open an inventory item to adjust the alert threshold or lead time</li>
+          <li>Explore the Add Item flow to see how a new listing is set up</li>
+        </ul>
+      </div>
+
+      <div class="label">Right column — iframe</div>
+      <div class="copy-block note">iframe pointing to /demo route. Placeholder grey box until /demo route is built and deployed. Reset button below iframe — keep.</div>
+
+      <div class="review-row">
+        <input type="checkbox" id="s2-approved">
+        <label for="s2-approved">Section approved — ready to build</label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─── SECTION 3: PROBLEM WORTH SOLVING ─── -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">The Problem Worth Solving</div>
+      <div class="section-status status-rewrite">Rewrite</div>
+    </div>
+    <div class="section-body">
+      <div class="change">Rewrite all three paragraphs. Tory leads as before, but paragraph 3 now ends on the product insight — not a tagline.</div>
+
+      <div class="label">H2 — keep</div>
+      <div class="copy-block">The Problem Worth Solving</div>
+
+      <div class="label">Paragraph 1 — Tory's world</div>
+      <div class="copy-block draft">
+        Tory runs her ceramics business alongside a full-time job. She sells on Etsy, does up to six craft shows a year, and stocks pieces through a local cafe. Everything is handmade with a three to four week production cycle. Inventory lives in her head, a notes app, and occasionally a spreadsheet she means to update.
+      </div>
+
+      <div class="label">Paragraph 2 — the failure moment</div>
+      <div class="copy-block draft">
+        After a show, she boxes up what did not sell and drives home. The online listings do not get updated. A week later, a customer orders something she no longer has. With a three to four week lead time, a missed update is a missed sale — and possibly a missed customer who does not come back.
+      </div>
+
+      <div class="label">Paragraph 3 — the insight</div>
+      <div class="copy-block draft">
+        The problem is not that Tory lacks discipline. It is that every tool available to her was designed for a desktop, a warehouse, or a business with staff. She needs something she can open at a table between customers, record three sales in under a minute, and put back in her pocket. That gap is where MakerPilot starts.
+      </div>
+
+      <div class="label">Persona image</div>
+      <div class="keep">Keep: Tory_Persona_sm.png, same layout — no changes needed</div>
+
+      <div class="review-row">
+        <input type="checkbox" id="s3-approved">
+        <label for="s3-approved">Section approved — ready to build</label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─── SECTION 4: COMPETITIVE GAP ─── -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">The Competitive Gap</div>
+      <div class="section-status status-fix">Style fix only</div>
+    </div>
+    <div class="section-body">
+      <div class="keep">Keep: intro line, table, Sortly callout — all copy is good as-is.</div>
+      <div class="change">Style fix only: remove <code>rounded-r-2xl</code> from the Sortly callout div (violates no-rounded-corners rule on cards).</div>
+
+      <div class="review-row">
+        <input type="checkbox" id="s4-approved">
+        <label for="s4-approved">Section approved — ready to build</label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─── SECTION 5: DESIGN DECISIONS ─── -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Design Decisions</div>
+      <div class="section-status status-keep">Keep + Add</div>
+    </div>
+    <div class="section-body">
+      <div class="keep">Keep: H2, intro paragraph, all four decision rows — this is the strongest section on the page. No copy changes.</div>
+      <div class="add">Add: mid-page secondary CTA directly after this section</div>
+
+      <div class="label">Mid-page CTA — new, placed after Design Decisions</div>
+      <div class="copy-block draft">
+        Interested in how this was built? Let's talk. → <a href="/contact" style="color:#007EA7;">contact</a>
+      </div>
+      <div class="copy-block note">Style: inline, low-key. Not a full section. One line of muted text + link. No button needed — the section already has momentum.</div>
+
+      <div class="review-row">
+        <input type="checkbox" id="s5-approved">
+        <label for="s5-approved">Section approved — ready to build</label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─── SECTION 6: KEY SCREENS ─── -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Key Screens</div>
+      <div class="section-status status-rewrite">Rewrite labels</div>
+    </div>
+    <div class="section-body">
+      <div class="change">Restore this section with new labels and captions. Four screens: Welcome, Etsy Sync, Home Dashboard, Lead Time Setter. Figma iPhone 16 mockup frames — placeholder until screenshots are taken and processed.</div>
+
+      <div class="label">H2</div>
+      <div class="copy-block">Key Screens</div>
+
+      <div class="label">Subtext</div>
+      <div class="copy-block">Four moments in the user journey, each a distinct design problem.</div>
+
+      <div class="label">Screen cards</div>
+      <div class="screen-grid">
+        <div class="screen-card">
+          <div class="screen-name">Welcome</div>
+          <div class="screen-desc">Entry point. One action, no friction.</div>
+        </div>
+        <div class="screen-card">
+          <div class="screen-name">Etsy Sync</div>
+          <div class="screen-desc">Import listings, set top sellers, skip what does not apply.</div>
+        </div>
+        <div class="screen-card">
+          <div class="screen-name">Home Dashboard</div>
+          <div class="screen-desc">One glance. What needs making, what is selling, what has changed.</div>
+        </div>
+        <div class="screen-card">
+          <div class="screen-name">Lead Time Setter</div>
+          <div class="screen-desc">The stepper that makes the alert system work. Alert threshold and lead time in one place.</div>
+        </div>
+      </div>
+
+      <div class="copy-block note">Screenshots needed: Chrome DevTools 393x852 → paste into Figma iPhone 16 Black mockup (free, Community) → export PNG → public/images/makerpilot/</div>
+
+      <div class="review-row">
+        <input type="checkbox" id="s6-approved">
+        <label for="s6-approved">Section approved — ready to build</label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─── SECTION 7: CORE LOOP ─── -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">The Core Loop</div>
+      <div class="section-status status-keep">Keep</div>
+    </div>
+    <div class="section-body">
+      <div class="keep">Keep: H2, intro paragraph, all five timeline steps — copy is good, no changes needed.</div>
+
+      <div class="review-row">
+        <input type="checkbox" id="s7-approved">
+        <label for="s7-approved">Section approved — ready to build</label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─── SECTION 8: PRODUCT THINKING ─── -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div class="section-title">Product Thinking</div>
+      <div class="section-status status-rewrite">Rewrite</div>
+    </div>
+    <div class="section-body">
+      <div class="change">Rename from "Pricing and Product Thinking" → "Product Thinking". New structure: intro paragraph → north star callout → pricing tiers (keep visually) → KPI strip → insight cards (rewrite all three).</div>
+
+      <div class="label">H2 — rename</div>
+      <div class="copy-block">Product Thinking</div>
+
+      <div class="label">Intro paragraph — rewrite</div>
+      <div class="copy-block draft">
+        Designing MakerPilot meant making product decisions, not just UX decisions. How should the app define success? What does a sustainable pricing model look like for a side-hustle user? Where does the free tier become a strategic tool rather than a courtesy? These are the decisions that shaped the product beyond the screens.
+      </div>
+
+      <div class="label">North star callout — lead with this, before pricing tiers</div>
+      <div class="copy-block draft">
+        <strong>North star metric:</strong> The number of makers who record a sale within 48 hours of a craft show. Not revenue. Not DAU. The one moment that proves the app is working as designed — fast capture, at the show floor, before the spreadsheet gets ignored again.
+      </div>
+
+      <div class="label">Heading above tier cards — new</div>
+      <div class="copy-block draft">Pricing as a design constraint</div>
+
+      <div class="label">Subtext above tier cards — new</div>
+      <div class="copy-block draft">The median Etsy seller earns $574 a month. Every tier was designed around what that number makes acceptable to spend.</div>
+
+      <div class="label">Pricing tier cards — keep visually, no copy changes</div>
+      <div class="keep">Keep: Starter / Maker / Studio / Pilot Pro cards — layout and copy unchanged</div>
+
+      <div class="label">KPI strip — new, 4 stats</div>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-stat">15–20%</div>
+          <div class="kpi-label">Free to paid conversion</div>
+          <div class="kpi-note">Industry standard for indie SaaS freemium</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-stat">$9</div>
+          <div class="kpi-label">Target conversion tier</div>
+          <div class="kpi-note">Below existing tool spend threshold for most Etsy sellers</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-stat">~$75/mo</div>
+          <div class="kpi-label">Infrastructure at 500 MAU</div>
+          <div class="kpi-note">Vercel, Supabase, Claude API combined</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-stat">~95%</div>
+          <div class="kpi-label">Gross margin at break-even</div>
+          <div class="kpi-note">High-margin SaaS once 180 users are paying</div>
+        </div>
+      </div>
+
+      <div class="label">Insight cards — rewrite all three</div>
+
+      <div class="card-preview">
+        <div class="card-preview-title">Free tier is a strategic constraint</div>
+        <div class="card-preview-body">The 10-item cap is not arbitrary. Tory has 100 Etsy listings. She hits the wall on day one. That is intentional: the free tier creates real upgrade pressure without feeling punitive, and it doubles as the demo entry point for anyone discovering MakerPilot through this portfolio.</div>
+      </div>
+
+      <div class="card-preview">
+        <div class="card-preview-title">$9 sits below the pain threshold</div>
+        <div class="card-preview-body">Most Etsy sellers already pay $10 to $15 a month for tools like Canva, Later, or Marmalead. The Maker tier at $9 sits below that. It reads as a utility bill, not a software subscription. The moment a price crosses $15, it becomes a decision. That is a line worth staying under.</div>
+      </div>
+
+      <div class="card-preview">
+        <div class="card-preview-title">AI pricing is margin math, not ambition</div>
+        <div class="card-preview-body">Claude API and MCP server hosting run $8 to $12 a month at light usage. A $39 Pilot Pro tier barely covers costs. At $59 with 25 users, the AI tier contributes real margin. That math only works if the feature genuinely earns it — which is why AI assistance is scoped to restocking planning, not sprinkled everywhere.</div>
+      </div>
+
+      <div class="review-row">
+        <input type="checkbox" id="s8-approved">
+        <label for="s8-approved">Section approved — ready to build</label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─── SECTION 9: WHAT'S NEXT ─── -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <div class="section-title">What's Next</div>
+      <div class="section-status status-trim">Trim</div>
+    </div>
+    <div class="section-body">
+      <div class="change">Trim from 6 cards to 4. Remove the two "Now" cards (demo route, screenshots) — those are done or in progress. Reframe subtext as product roadmap, not status update.</div>
+      <div class="cut">Cut: "/demo route with seed data" card and "Key screen screenshots" card — both will be done before the page goes live.</div>
+
+      <div class="label">H2 — keep</div>
+      <div class="copy-block">What's Next</div>
+
+      <div class="label">Subtext — rewrite</div>
+      <div class="copy-block draft">The v1 build covers the core loop. These are the phases that take MakerPilot from a working app to a real product.</div>
+
+      <div class="label">4 remaining cards</div>
+
+      <div class="card-preview">
+        <div class="card-preview-title">Phase 2 — Etsy webhook sync</div>
+        <div class="card-preview-body">Real-time sale to auto-decrement. When an Etsy order comes in, stock drops without any manual action from Tory.</div>
+      </div>
+      <div class="card-preview">
+        <div class="card-preview-title">Phase 2 — Make-list and batch planning</div>
+        <div class="card-preview-body">Batch quantity suggestions based on sales velocity and lead time. Not just what to make, but how much and when.</div>
+      </div>
+      <div class="card-preview">
+        <div class="card-preview-title">Phase 3 — AI restocking assistant</div>
+        <div class="card-preview-body">Ask MakerPilot what to prioritize before a show. Get a ranked make-list based on sales history and upcoming event dates.</div>
+      </div>
+      <div class="card-preview">
+        <div class="card-preview-title">Phase 3 — Craft show mode</div>
+        <div class="card-preview-body">Offline-first bulk sale recording for shows with poor signal. Record everything, sync when back online.</div>
+      </div>
+
+      <div class="review-row">
+        <input type="checkbox" id="s9-approved">
+        <label for="s9-approved">Section approved — ready to build</label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─── SECTION 10: SKILLS ─── -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">10</div>
+      <div class="section-title">Skills Demonstrated</div>
+      <div class="section-status status-fix">Fix + Add</div>
+    </div>
+    <div class="section-body">
+      <div class="change">Fix #C2590A → #FF6600 on Front-End dots. Rename "Front-End Build" → "Engineering". Add one item to each column.</div>
+
+      <div class="skills-grid">
+        <div class="skills-col">
+          <div class="skills-col-title">UX Design</div>
+          <ul>
+            <li>User research and personas</li>
+            <li>Competitive analysis</li>
+            <li>iOS design conventions</li>
+            <li>WCAG AAA accessibility</li>
+            <li>Component systems</li>
+            <li>Pricing strategy</li>
+            <li class="new">+ Product thinking and KPI definition</li>
+          </ul>
+        </div>
+        <div class="skills-col">
+          <div class="skills-col-title" style="color: #FF6600;">Engineering <span style="font-size:10px; color:#9CA3AF; font-weight:400;">(renamed from "Front-End Build")</span></div>
+          <ul>
+            <li>React + TypeScript</li>
+            <li>Tailwind CSS v3</li>
+            <li>Mobile-first layout</li>
+            <li>Vite + react-router-dom</li>
+            <li>Shared component patterns</li>
+            <li>Git / VS Code</li>
+            <li class="new">+ State management and routing architecture</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="review-row">
+        <input type="checkbox" id="s10-approved">
+        <label for="s10-approved">Section approved — ready to build</label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─── SECTION 11: CTA ─── -->
+  <div class="section-card">
+    <div class="section-header">
+      <div class="section-num">11</div>
+      <div class="section-title">CTA — Let's Chat</div>
+      <div class="section-status status-rewrite">Rewrite text</div>
+    </div>
+    <div class="section-body">
+      <div class="change">Rewrite the line above the button — current version is generic. Make it specific to the role you want.</div>
+
+      <div class="label">Text above button — rewrite</div>
+      <div class="copy-block draft">
+        Looking for a senior UX designer who can take a product from research to working code? Let's talk.
+      </div>
+
+      <div class="label">Button — keep</div>
+      <div class="keep">Keep: "Let's Chat" button, same styling</div>
+
+      <div class="review-row">
+        <input type="checkbox" id="s11-approved">
+        <label for="s11-approved">Section approved — ready to build</label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─── GLOBAL FIXES ─── -->
+  <div class="section-card" style="border-color: #FCA5A5;">
+    <div class="section-header" style="background: #FEF2F2;">
+      <div class="section-num" style="background: #B91C1C;">!</div>
+      <div class="section-title">Global Fixes — Do First</div>
+      <div class="section-status status-fix">Required</div>
+    </div>
+    <div class="section-body">
+      <div class="cut">Find and replace every instance of <code>#C2590A</code> with <code>#FF6600</code> across the entire file</div>
+      <div class="cut">Remove <code>rounded-2xl</code> from all card and tag elements</div>
+      <div class="cut">Remove <code>rounded-full</code> from all tag and badge elements (Pill component in competitor table may stay — it is UI chrome, not a card)</div>
+      <div class="cut">Remove <code>shadow-sm</code> from insight cards — replace with neumorphic shadow: <code>shadow-[5px_5px_15px_#d1d9e6,-5px_-5px_15px_#ffffff]</code></div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

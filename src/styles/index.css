@@ -1,3 +1,53 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+
+/* Hide scrollbars inside the phone frame only — in-app scroll still works */
+#root,
+#root * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#root::-webkit-scrollbar,
+#root *::-webkit-scrollbar {
+  display: none;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  min-height: 100vh;
+  background: #F5F5F7;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  padding: 48px 24px;
+  box-sizing: border-box;
+}
+
+#root {
+  width: 393px;
+  height: 852px;
+  min-width: 393px;
+  min-height: 852px;
+  overflow: hidden;
+  background: white;
+  position: relative;
+  border-radius: 44px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.18);
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* In-app scroll surfaces — momentum scroll, no rubber-band bounce */
+#root .overflow-y-auto,
+#root .overflow-auto {
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+[data-sonner-toaster] { pointer-events: none; }
+[data-sonner-toast]   { pointer-events: auto; }

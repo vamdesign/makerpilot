@@ -1,6 +1,8 @@
 import { useNavigate, useLocation } from 'react-router';
-import Group1 from '../../imports/Group1-1/Group1-27-76';
+import CornerPlaneMark from './CornerPlaneMark';
+import ScreenHeader from './ScreenHeader';
 import Base from '../../imports/Base/Base';
+import { writePrimaryChannel } from '../inventory/trackedInventory';
 
 export default function ManualSync() {
   const navigate = useNavigate();
@@ -10,6 +12,7 @@ export default function ManualSync() {
   const currentIndex = location.state?.currentIndex || 0;
 
   const handleSync = () => {
+    writePrimaryChannel('manual');
     const nextIndex = currentIndex + 1;
 
     // Check if there are more channels to sync
@@ -32,30 +35,24 @@ export default function ManualSync() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col max-w-[430px] mx-auto relative" style={{ zIndex: 0 }}>
-      {/* Base background */}
-      <div className="absolute inset-0">
-        <Base />
-      </div>
+    <div className="relative mx-auto flex h-full min-h-0 max-w-[430px] flex-col" style={{ zIndex: 0 }}>
+      <Base />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col px-6 py-12">
-        {/* Orange paper plane icon - small in top right */}
-        <div className="absolute top-6 right-6 w-[50px] h-[45px]">
-          <Group1 />
-        </div>
+      <div className="relative z-10 flex flex-col">
+        <CornerPlaneMark />
 
-        {/* Headline */}
-        <h1 className="text-center mb-3 mt-8" style={{fontFamily: "'DM Serif Display', serif"}}>
-          Manual inventory tracking
-        </h1>
+        <ScreenHeader>
+          <h1 className="text-center mb-3" style={{fontFamily: "'DM Serif Display', serif"}}>
+            Manual inventory tracking
+          </h1>
 
-        {/* Subhead */}
-        <p className="text-center text-gray-500 mb-12">
-          Track craft show and in-person sales manually.
-        </p>
+          <p className="text-center text-gray-500 mb-12">
+            Track craft show and in-person sales manually.
+          </p>
+        </ScreenHeader>
 
-        {/* White card placeholder */}
+        <div className="px-6">
         <div className="bg-white rounded-2xl p-12 mb-8 flex flex-col items-center justify-center shadow-sm min-h-[250px]">
           <p className="font-['DM_Sans:Regular',sans-serif] text-[16px] text-gray-500 text-center">
             Ready to track your inventory manually
@@ -65,10 +62,11 @@ export default function ManualSync() {
         {/* Sync button */}
         <button
           onClick={handleSync}
-          className="w-full py-4 rounded-xl font-['DM_Sans:SemiBold',sans-serif] text-[16px] bg-[#1A9E8F] text-white cursor-pointer"
+          className="w-full py-4 rounded-xl font-['DM_Sans:SemiBold',sans-serif] text-[16px] bg-[#1A9E8F] text-white"
         >
           Sync
         </button>
+        </div>
       </div>
     </div>
   );

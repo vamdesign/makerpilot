@@ -1,38 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { ChevronLeft } from 'lucide-react';
 import Base from '../../imports/Base/Base';
-import Group1 from '../../imports/Group1-1/Group1-27-76';
-import HandmadeCeramicMushroomSpoonRest from '../../imports/HandmadeCeramicMushroomSpoonRest/HandmadeCeramicMushroomSpoonRest';
-import TomatoCeramicMugTumblerHandmade from '../../imports/TomatoCeramicMugTumblerHandmade/TomatoCeramicMugTumblerHandmade';
-import WatermelonCeramicMugTumblerHandmade from '../../imports/WatermelonCeramicMugTumblerHandmade/WatermelonCeramicMugTumblerHandmade';
-import StrawberryCeramicMugTumblerHandmade from '../../imports/StrawberryCeramicMugTumblerHandmade/StrawberryCeramicMugTumblerHandmade';
-import BlueberryCeramicMugTumblerHandmade from '../../imports/BlueberryCeramicMugTumblerHandmade/BlueberryCeramicMugTumblerHandmade';
-import CitrusCeramicMugTumblerHandmade from '../../imports/CitrusCeramicMugTumblerHandmade/CitrusCeramicMugTumblerHandmade';
-import EvilEyeCeramicMugTumblerHandmade from '../../imports/EvilEyeCeramicMugTumblerHandmade/EvilEyeCeramicMugTumblerHandmade';
-import LargeHandCarvedCeramicServingBowls from '../../imports/LargeHandCarvedCeramicServingBowls/LargeHandCarvedCeramicServingBowls';
-import Component65InchCeramicCatSlowFeederBowl from '../../imports/65InchCeramicCatSlowFeederBowl/65InchCeramicCatSlowFeederBowl';
-import Component55InchCeramicCatSlowFeederBowl from '../../imports/55InchCeramicCatSlowFeederBowl/55InchCeramicCatSlowFeederBowl';
-import Component8InchXlCeramicCatSlowFeeder from '../../imports/8InchXlCeramicCatSlowFeeder/8InchXlCeramicCatSlowFeeder';
-import Small1CupSlowFeederCeramic from '../../imports/Small1CupSlowFeederCeramic/Small1CupSlowFeederCeramic';
-import SmallMedium2CupSlowFeederCeramic from '../../imports/SmallMedium2CupSlowFeederCeramic/SmallMedium2CupSlowFeederCeramic';
-import Component3CupCeramicSlowFeederBowl from '../../imports/3CupCeramicSlowFeederBowl/3CupCeramicSlowFeederBowl';
-import Component345CupBlueSprayLongEarSpaniel from '../../imports/345CupBlueSprayLongEarSpaniel/345CupBlueSprayLongEarSpaniel';
-import Component3CupLongEarSpanielWaterBowl from '../../imports/3CupLongEarSpanielWaterBowl/3CupLongEarSpanielWaterBowl';
-import Component4CupPetFoodWaterCeramic from '../../imports/4CupPetFoodWaterCeramic/4CupPetFoodWaterCeramic';
-import WhitePetFoodWaterCeramic from '../../imports/WhitePetFoodWaterCeramic/WhitePetFoodWaterCeramic';
-import BlueHangingCeramicBirdFeeder from '../../imports/BlueHangingCeramicBirdFeeder/BlueHangingCeramicBirdFeeder';
-import GreenBlueHangingCeramicBirdFeeder from '../../imports/GreenBlueHangingCeramicBirdFeeder/GreenBlueHangingCeramicBirdFeeder';
-import GreenHangingCeramicBirdFeeder from '../../imports/GreenHangingCeramicBirdFeeder/GreenHangingCeramicBirdFeeder';
-import CharcuterieBoardCheesePlatePorcelain from '../../imports/CharcuterieBoardCheesePlatePorcelain/CharcuterieBoardCheesePlatePorcelain';
-import CharcuterieBoardCheesePlateSeashell from '../../imports/CharcuterieBoardCheesePlateSeashell/CharcuterieBoardCheesePlateSeashell';
-import CharcuterieBoardCheesePlateStoneware from '../../imports/CharcuterieBoardCheesePlateStoneware/CharcuterieBoardCheesePlateStoneware';
-import ServingSaladFruitCarvedWhiteBowl from '../../imports/ServingSaladFruitCarvedWhiteBowl/ServingSaladFruitCarvedWhiteBowl';
-import ServingSaladFruitCarvedMatteWhite from '../../imports/ServingSaladFruitCarvedMatteWhite/ServingSaladFruitCarvedMatteWhite';
-import CasseroleBakingDishHandmadeCera from '../../imports/CasseroleBakingDishHandmadeCera/CasseroleBakingDishHandmadeCera';
-import LargeHandCarvedCeramic from '../../imports/LargeHandCarvedCeramic/LargeHandCarvedCeramic';
-import Component5CupBlueSprayLongEarSpaniel from '../../imports/5CupBlueSprayLongEarSpaniel/5CupBlueSprayLongEarSpaniel';
-import RainbowSaltCellar from '../../imports/RainbowSaltCellar/RainbowSaltCellar';
+import CornerPlaneMark from './CornerPlaneMark';
+import ScreenHeader from './ScreenHeader';
+import TopSellerBadge from './TopSellerBadge';
+import { PRODUCT_THUMBNAIL_BY_ID as thumbnailMap } from '../data/productThumbnailMap';
+import {
+  MAX_TRACKED_ITEMS,
+  readTrackedFromStorage,
+  trackedItemCount,
+} from '../inventory/trackedInventory';
 
 interface ListingItem {
   id: number;
@@ -45,71 +23,38 @@ interface ListingItem {
   thumbnail?: React.ComponentType;
 }
 
-// Thumbnail mapping by ID
-const thumbnailMap: { [key: number]: React.ComponentType } = {
-  1: HandmadeCeramicMushroomSpoonRest,
-  2: TomatoCeramicMugTumblerHandmade,
-  3: WatermelonCeramicMugTumblerHandmade,
-  4: StrawberryCeramicMugTumblerHandmade,
-  5: BlueberryCeramicMugTumblerHandmade,
-  6: CitrusCeramicMugTumblerHandmade,
-  7: EvilEyeCeramicMugTumblerHandmade,
-  8: LargeHandCarvedCeramicServingBowls,
-  9: Component65InchCeramicCatSlowFeederBowl,
-  10: Component55InchCeramicCatSlowFeederBowl,
-  11: Component8InchXlCeramicCatSlowFeeder,
-  12: Small1CupSlowFeederCeramic,
-  13: SmallMedium2CupSlowFeederCeramic,
-  14: Component3CupCeramicSlowFeederBowl,
-  15: Component345CupBlueSprayLongEarSpaniel,
-  16: Component3CupLongEarSpanielWaterBowl,
-  17: Component4CupPetFoodWaterCeramic,
-  18: WhitePetFoodWaterCeramic,
-  19: BlueHangingCeramicBirdFeeder,
-  20: GreenBlueHangingCeramicBirdFeeder,
-  21: GreenHangingCeramicBirdFeeder,
-  22: CharcuterieBoardCheesePlatePorcelain,
-  23: CharcuterieBoardCheesePlateSeashell,
-  24: CharcuterieBoardCheesePlateStoneware,
-  25: ServingSaladFruitCarvedWhiteBowl,
-  26: ServingSaladFruitCarvedMatteWhite,
-  27: CasseroleBakingDishHandmadeCera,
-  28: LargeHandCarvedCeramic,
-  29: Component5CupBlueSprayLongEarSpaniel,
-  30: RainbowSaltCellar,
-};
 
 const initialListings: ListingItem[] = [
-  { id: 1, title: 'Handmade Ceramic Mushroom Spoon Rest', price: '$21.00', quantity: 6, thumbnail: HandmadeCeramicMushroomSpoonRest },
-  { id: 2, title: 'Tomato Ceramic Mug Tumbler Handmade', price: '$36.00', quantity: 3, isTopSeller: true, topSellerRank: 1, thumbnail: TomatoCeramicMugTumblerHandmade },
-  { id: 3, title: 'Watermelon Ceramic Mug Tumbler Handmade', price: '$36.00', quantity: 4, isTopSeller: true, topSellerRank: 5, thumbnail: WatermelonCeramicMugTumblerHandmade },
-  { id: 4, title: 'Strawberry Ceramic Mug Tumbler Handmade', price: '$36.00', quantity: 7, isTopSeller: true, topSellerRank: 2, thumbnail: StrawberryCeramicMugTumblerHandmade },
-  { id: 5, title: 'Blueberry Ceramic Mug Tumbler Handmade', price: '$36.00', quantity: 5, isTopSeller: true, topSellerRank: 3, thumbnail: BlueberryCeramicMugTumblerHandmade },
-  { id: 6, title: 'Citrus Ceramic Mug Tumbler Handmade', price: '$36.00', quantity: 2, isTopSeller: true, topSellerRank: 4, thumbnail: CitrusCeramicMugTumblerHandmade },
-  { id: 7, title: 'Evil Eye Ceramic Mug Tumbler Handmade', price: '$42.00', quantity: 3, thumbnail: EvilEyeCeramicMugTumblerHandmade },
-  { id: 8, title: 'Large Hand-Carved Ceramic Serving Bowls', price: '$100.00', quantity: 1, hasVariations: true, thumbnail: LargeHandCarvedCeramicServingBowls },
-  { id: 9, title: '6.5 inch Ceramic Cat Slow Feeder Bowl', price: '$45.00', quantity: 2, thumbnail: Component65InchCeramicCatSlowFeederBowl },
-  { id: 10, title: '5.5 inch Ceramic Cat Slow Feeder Bowl', price: '$43.00', quantity: 4, thumbnail: Component55InchCeramicCatSlowFeederBowl },
-  { id: 11, title: '8 inch XL Ceramic Cat Slow Feeder', price: '$50.00', quantity: 1, thumbnail: Component8InchXlCeramicCatSlowFeeder },
-  { id: 12, title: 'Small 1 cup Slow Feeder Ceramic', price: '$39.89', quantity: 5, thumbnail: Small1CupSlowFeederCeramic },
-  { id: 13, title: 'Small-Medium 2 cup Slow Feeder Ceramic', price: '$46.89', quantity: 3, thumbnail: SmallMedium2CupSlowFeederCeramic },
-  { id: 14, title: '3 cup Ceramic Slow Feeder Bowl', price: '$53.89', quantity: 2, thumbnail: Component3CupCeramicSlowFeederBowl },
-  { id: 15, title: '3, 4, 5 cup Blue Spray Long ear Spaniel...', price: '$35.00', quantity: 9, hasVariations: true, thumbnail: Component345CupBlueSprayLongEarSpaniel },
-  { id: 16, title: '3 cup Long ear Spaniel water Bowl', price: '$35.00', quantity: 4, thumbnail: Component3CupLongEarSpanielWaterBowl },
-  { id: 17, title: '4 cup Pet Food Water Ceramic', price: '$29.89', quantity: 6, thumbnail: Component4CupPetFoodWaterCeramic },
-  { id: 18, title: 'White Pet Food Water Ceramic', price: '$27.89', quantity: 3, thumbnail: WhitePetFoodWaterCeramic },
-  { id: 19, title: 'Blue Hanging Ceramic Bird Feeder', price: '$41.00', quantity: 1, thumbnail: BlueHangingCeramicBirdFeeder },
-  { id: 20, title: 'Green & Blue Hanging Ceramic Bird Feeder', price: '$41.00', quantity: 2, thumbnail: GreenBlueHangingCeramicBirdFeeder },
-  { id: 21, title: 'Green Hanging Ceramic Bird Feeder', price: '$39.00', quantity: 1, thumbnail: GreenHangingCeramicBirdFeeder },
-  { id: 22, title: 'Charcuterie Board Cheese Plate Porcelain', price: '$70.00', quantity: 3, thumbnail: CharcuterieBoardCheesePlatePorcelain },
-  { id: 23, title: 'Charcuterie Board Cheese Plate Seashell', price: '$70.00', quantity: 2, thumbnail: CharcuterieBoardCheesePlateSeashell },
-  { id: 24, title: 'Charcuterie Board Cheese Plate Stoneware', price: '$45.00', quantity: 4, thumbnail: CharcuterieBoardCheesePlateStoneware },
-  { id: 25, title: 'Serving Salad Fruit Carved White Bowl', price: '$52.00', quantity: 2, thumbnail: ServingSaladFruitCarvedWhiteBowl },
-  { id: 26, title: 'Serving Salad Fruit Carved Matte White', price: '$52.00', quantity: 1, thumbnail: ServingSaladFruitCarvedMatteWhite },
-  { id: 27, title: 'Casserole Baking Dish handmade cera...', price: '$56.00', quantity: 1, thumbnail: CasseroleBakingDishHandmadeCera },
-  { id: 28, title: 'Large Hand-Carved Ceramic ...', price: '$100.00', quantity: 1, thumbnail: LargeHandCarvedCeramic },
-  { id: 29, title: '5 cup Blue Spray Long ear Spaniel', price: '$41.00', quantity: 3, thumbnail: Component5CupBlueSprayLongEarSpaniel },
-  { id: 30, title: 'Rainbow Salt Cellar', price: '$30.00', quantity: 5, thumbnail: RainbowSaltCellar },
+  { id: 1, title: 'Handmade Ceramic Mushroom Spoon Rest', price: '$21.00', quantity: 6, thumbnail: thumbnailMap[1] },
+  { id: 2, title: 'Tomato Ceramic Mug Tumbler Handmade', price: '$36.00', quantity: 3, isTopSeller: true, topSellerRank: 1, thumbnail: thumbnailMap[2] },
+  { id: 3, title: 'Watermelon Ceramic Mug Tumbler Handmade', price: '$36.00', quantity: 4, isTopSeller: true, topSellerRank: 5, thumbnail: thumbnailMap[3] },
+  { id: 4, title: 'Strawberry Ceramic Mug Tumbler Handmade', price: '$36.00', quantity: 7, isTopSeller: true, topSellerRank: 2, thumbnail: thumbnailMap[4] },
+  { id: 5, title: 'Blueberry Ceramic Mug Tumbler Handmade', price: '$36.00', quantity: 5, isTopSeller: true, topSellerRank: 3, thumbnail: thumbnailMap[5] },
+  { id: 6, title: 'Citrus Ceramic Mug Tumbler Handmade', price: '$36.00', quantity: 2, isTopSeller: true, topSellerRank: 4, thumbnail: thumbnailMap[6] },
+  { id: 7, title: 'Evil Eye Ceramic Mug Tumbler Handmade', price: '$42.00', quantity: 3, thumbnail: thumbnailMap[7] },
+  { id: 8, title: 'Large Hand-Carved Ceramic Serving Bowls', price: '$100.00', quantity: 1, hasVariations: true, thumbnail: thumbnailMap[8] },
+  { id: 9, title: '6.5 inch Ceramic Cat Slow Feeder Bowl', price: '$45.00', quantity: 2, thumbnail: thumbnailMap[9] },
+  { id: 10, title: '5.5 inch Ceramic Cat Slow Feeder Bowl', price: '$43.00', quantity: 4, thumbnail: thumbnailMap[10] },
+  { id: 11, title: '8 inch XL Ceramic Cat Slow Feeder', price: '$50.00', quantity: 1, thumbnail: thumbnailMap[11] },
+  { id: 12, title: 'Small 1 cup Slow Feeder Ceramic', price: '$39.89', quantity: 5, thumbnail: thumbnailMap[12] },
+  { id: 13, title: 'Small-Medium 2 cup Slow Feeder Ceramic', price: '$46.89', quantity: 3, thumbnail: thumbnailMap[13] },
+  { id: 14, title: '3 cup Ceramic Slow Feeder Bowl', price: '$53.89', quantity: 2, thumbnail: thumbnailMap[14] },
+  { id: 15, title: '3, 4, 5 cup Blue Spray Long ear Spaniel...', price: '$35.00', quantity: 9, hasVariations: true, thumbnail: thumbnailMap[15] },
+  { id: 16, title: '3 cup Long ear Spaniel water Bowl', price: '$35.00', quantity: 4, thumbnail: thumbnailMap[16] },
+  { id: 17, title: '4 cup Pet Food Water Ceramic', price: '$29.89', quantity: 6, thumbnail: thumbnailMap[17] },
+  { id: 18, title: 'White Pet Food Water Ceramic', price: '$27.89', quantity: 3, thumbnail: thumbnailMap[18] },
+  { id: 19, title: 'Blue Hanging Ceramic Bird Feeder', price: '$41.00', quantity: 1, thumbnail: thumbnailMap[19] },
+  { id: 20, title: 'Green & Blue Hanging Ceramic Bird Feeder', price: '$41.00', quantity: 2, thumbnail: thumbnailMap[20] },
+  { id: 21, title: 'Green Hanging Ceramic Bird Feeder', price: '$39.00', quantity: 1, thumbnail: thumbnailMap[21] },
+  { id: 22, title: 'Charcuterie Board Cheese Plate Porcelain', price: '$70.00', quantity: 3, thumbnail: thumbnailMap[22] },
+  { id: 23, title: 'Charcuterie Board Cheese Plate Seashell', price: '$70.00', quantity: 2, thumbnail: thumbnailMap[23] },
+  { id: 24, title: 'Charcuterie Board Cheese Plate Stoneware', price: '$45.00', quantity: 4, thumbnail: thumbnailMap[24] },
+  { id: 25, title: 'Serving Salad Fruit Carved White Bowl', price: '$52.00', quantity: 2, thumbnail: thumbnailMap[25] },
+  { id: 26, title: 'Serving Salad Fruit Carved Matte White', price: '$52.00', quantity: 1, thumbnail: thumbnailMap[26] },
+  { id: 27, title: 'Casserole Baking Dish handmade cera...', price: '$56.00', quantity: 1, thumbnail: thumbnailMap[27] },
+  { id: 28, title: 'Large Hand-Carved Ceramic ...', price: '$100.00', quantity: 1, thumbnail: thumbnailMap[28] },
+  { id: 29, title: '5 cup Blue Spray Long ear Spaniel', price: '$41.00', quantity: 3, thumbnail: thumbnailMap[29] },
+  { id: 30, title: 'Rainbow Salt Cellar', price: '$30.00', quantity: 5, thumbnail: thumbnailMap[30] },
 ];
 
 type SortType = 'top-sellers' | 'alphabetical' | 'quantity' | 'selected';
@@ -123,10 +68,24 @@ export default function ChooseListings() {
   const [sortType, setSortType] = useState<SortType>('top-sellers');
   const [qtyDirection, setQtyDirection] = useState<SortDirection>('desc');
   const [alphaDirection, setAlphaDirection] = useState<SortDirection>('asc');
-  const MAX_ITEMS = 10;
 
-  // Get source from navigation state, default to 'Etsy'
+  const isAddMode = location.state?.mode === 'add';
   const source = location.state?.source || 'Etsy';
+
+  const trackedRows = useMemo(() => readTrackedFromStorage() ?? [], [location.key]);
+  const trackedStockById = useMemo(() => {
+    const map = new Map<number, number>();
+    trackedRows.forEach((r) => map.set(r.id, r.stock));
+    return map;
+  }, [trackedRows]);
+  const alreadyTrackedIds = useMemo(
+    () => new Set(trackedRows.map((r) => r.id)),
+    [trackedRows],
+  );
+
+  const maxSelectable = isAddMode
+    ? Math.max(0, MAX_TRACKED_ITEMS - trackedItemCount())
+    : MAX_TRACKED_ITEMS;
 
   // Load inventory from localStorage or use initial values
   const [listings, setListings] = useState<ListingItem[]>(() => {
@@ -148,6 +107,8 @@ export default function ChooseListings() {
   }, [listings]);
 
   const toggleItem = (id: number) => {
+    if (alreadyTrackedIds.has(id)) return;
+
     const newSelected = new Set(selectedItems);
     let newOrder = [...selectionOrder];
 
@@ -155,7 +116,7 @@ export default function ChooseListings() {
       newSelected.delete(id);
       newOrder = newOrder.filter(itemId => itemId !== id);
     } else {
-      if (newSelected.size < MAX_ITEMS) {
+      if (newSelected.size < maxSelectable) {
         newSelected.add(id);
         newOrder.push(id);
       }
@@ -222,37 +183,30 @@ export default function ChooseListings() {
   };
 
   const sortedListings = getSortedListings();
-  const isMaxReached = selectedItems.size >= MAX_ITEMS;
+  const isMaxReached = selectedItems.size >= maxSelectable;
   const canContinue = selectedItems.size > 0;
 
   return (
-    <div className="min-h-screen flex flex-col max-w-[430px] mx-auto relative">
-      {/* Base background */}
-      <div className="absolute inset-0">
-        <Base />
-      </div>
+    <div className="relative mx-auto flex h-full min-h-0 max-w-[430px] flex-col">
+      <Base />
 
-      {/* Content */}
-      <div className="relative z-10 flex flex-col h-screen">
-        {/* Orange paper plane icon - small in top right */}
-        <div className="absolute top-6 right-6 w-[50px] h-[45px] z-20">
-          <Group1 />
-        </div>
+      {/* Content — h-full (not 100vh) so sticky footer aligns with #root phone frame */}
+      <div className="relative z-10 flex flex-col h-full min-h-0">
+        <CornerPlaneMark />
 
         {/* Back button - top left */}
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-6 left-6 flex items-center gap-2 transition-opacity z-20"
+          className="absolute top-6 left-6 flex items-center gap-2 z-20"
         >
           <ChevronLeft size={20} className="text-gray-700" />
           <span className="font-['DM_Sans:Regular',sans-serif] text-[14px] text-gray-700">Back</span>
         </button>
 
         {/* Header */}
-        <div className="px-6 pt-20 pb-3">
-          {/* Headline */}
+        <ScreenHeader>
           <h1 className="text-center mb-3" style={{fontFamily: "'DM Serif Display', serif"}}>
-            Your {source} Inventory
+            {isAddMode ? `Add from ${source}` : `Your ${source} Inventory`}
           </h1>
 
           {/* Counter - centered */}
@@ -260,7 +214,7 @@ export default function ChooseListings() {
             <p className={`font-['DM_Sans:SemiBold',sans-serif] text-[14px] ${
               isMaxReached ? 'text-[#FF6600]' : 'text-[#1A9E8F]'
             }`}>
-              {selectedItems.size} of {MAX_ITEMS} selected
+              {trackedItemCount() + selectedItems.size} of {MAX_TRACKED_ITEMS} selected
             </p>
           </div>
 
@@ -268,7 +222,7 @@ export default function ChooseListings() {
           <div className="flex gap-2 justify-center mb-4">
             <button
               onClick={() => handleSortChange('top-sellers')}
-              className={`px-3 py-2 rounded-full font-['DM_Sans:SemiBold',sans-serif] text-[12px] transition-all flex items-center gap-1 border ${
+              className={`px-3 py-2 rounded-full font-['DM_Sans:SemiBold',sans-serif] text-[12px] flex items-center gap-1 border ${
                 sortType === 'top-sellers'
                   ? 'bg-[#1A9E8F] text-white border-[#1A9E8F]'
                   : 'bg-white border-gray-300 text-gray-600'
@@ -281,7 +235,7 @@ export default function ChooseListings() {
             </button>
             <button
               onClick={() => handleSortChange('alphabetical')}
-              className={`px-3 py-2 rounded-full font-['DM_Sans:SemiBold',sans-serif] text-[12px] transition-all border ${
+              className={`px-3 py-2 rounded-full font-['DM_Sans:SemiBold',sans-serif] text-[12px] border ${
                 sortType === 'alphabetical'
                   ? 'bg-[#1A9E8F] text-white border-[#1A9E8F]'
                   : 'bg-white border-gray-300 text-gray-600'
@@ -291,7 +245,7 @@ export default function ChooseListings() {
             </button>
             <button
               onClick={() => handleSortChange('quantity')}
-              className={`px-3 py-2 rounded-full font-['DM_Sans:SemiBold',sans-serif] text-[12px] transition-all border ${
+              className={`px-3 py-2 rounded-full font-['DM_Sans:SemiBold',sans-serif] text-[12px] border ${
                 sortType === 'quantity'
                   ? 'bg-[#1A9E8F] text-white border-[#1A9E8F]'
                   : 'bg-white border-gray-300 text-gray-600'
@@ -302,7 +256,7 @@ export default function ChooseListings() {
             <button
               onClick={() => selectedItems.size > 0 && handleSortChange('selected')}
               disabled={selectedItems.size === 0}
-              className={`px-3 py-2 rounded-full font-['DM_Sans:SemiBold',sans-serif] text-[12px] transition-all flex items-center gap-1 border ${
+              className={`px-3 py-2 rounded-full font-['DM_Sans:SemiBold',sans-serif] text-[12px] flex items-center gap-1 border ${
                 sortType === 'selected'
                   ? 'bg-[#1A9E8F] text-white border-[#1A9E8F]'
                   : selectedItems.size === 0
@@ -316,87 +270,82 @@ export default function ChooseListings() {
               Selected
             </button>
           </div>
-        </div>
+        </ScreenHeader>
 
         {/* Scrollable list */}
         <div className="flex-1 overflow-y-auto px-6 pb-32">
           {sortedListings.map((item) => {
             const isSelected = selectedItems.has(item.id);
-            const isDisabled = !isSelected && isMaxReached;
+            const isAlreadyTracked = alreadyTrackedIds.has(item.id);
+            const liveTrackedStock = trackedStockById.get(item.id) ?? item.quantity;
+            const displayStock = isAlreadyTracked ? liveTrackedStock : item.quantity;
+            const isDisabled = !isSelected && (isMaxReached || isAlreadyTracked);
             const isDimmed = item.hasVariations || isDisabled;
 
             return (
               <div
                 key={item.id}
                 onClick={() => !item.hasVariations && !isDisabled && toggleItem(item.id)}
-                className={`border-2 rounded-xl p-4 mb-3 ${
+                className={`border-2 rounded-xl px-3 py-4 mb-2 ${
                   isSelected
                     ? 'bg-[#E6F4F2] border-[#1A9E8F]'
                     : isDimmed
                     ? 'bg-gray-100 border-[#E5E7EB]'
                     : 'bg-white border-[#E5E7EB]'
-                } ${
-                  !isDimmed ? 'cursor-pointer' : ''
                 }`}
                 style={{ zIndex: 0 }}
               >
                 <div className="flex items-start gap-3">
-                  {/* Left side - Thumbnail with checkmark below */}
-                  <div className="flex flex-col items-center gap-1">
-                    {item.thumbnail && (
-                      <div className="w-[40px] h-[40px] flex-shrink-0 rounded overflow-hidden">
-                        <item.thumbnail />
-                      </div>
-                    )}
-                    {!item.hasVariations && (
-                      <div className="w-5 h-5 flex items-center justify-center">
-                        {isSelected && (
-                          <svg className="w-5 h-5 text-[#1A9E8F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        )}
-                      </div>
-                    )}
-                  </div>
+                  {item.thumbnail && (
+                    <div className="flex h-10 w-10 shrink-0 overflow-hidden rounded [&_*]:leading-none [&_svg]:block [&_svg]:h-full [&_svg]:max-h-full [&_svg]:w-full">
+                      <item.thumbnail />
+                    </div>
+                  )}
 
-                  {/* Middle - Title, top seller badge, and variations */}
-                  <div className="flex-1">
-                    <p className={`font-['DM_Sans:Regular',sans-serif] text-[14px] mb-1 ${
-                      isDimmed ? 'text-gray-400' : 'text-gray-900'
-                    }`}>
+                  {/* Title, badges, variations */}
+                  <div className="min-w-0 flex-1">
+                    <p
+                      className={`m-0 font-['DM_Sans:Regular',sans-serif] text-[14px] leading-tight ${
+                        isDimmed ? 'text-gray-400' : 'text-gray-900'
+                      }`}
+                    >
                       {item.title}
                     </p>
                     {item.isTopSeller && !isDimmed && (
-                      <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#FFF0E5] rounded-full mb-1">
-                        <svg className="w-3 h-3 fill-[#FF6600]" viewBox="0 0 24 24">
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </svg>
-                        <span className="font-['DM_Sans:Regular',sans-serif] text-[11px] text-[#CC5200]">
-                          Top seller
-                        </span>
+                      <div className="mt-1 mb-0">
+                        <TopSellerBadge />
                       </div>
                     )}
                     {item.hasVariations && (
-                      <p className="font-['DM_Sans:Italic',sans-serif] text-[12px] text-gray-600 mt-1">
+                      <p className="mt-1 mb-0 font-['DM_Sans:Italic',sans-serif] text-[12px] text-gray-600">
                         Contains variations, upgrade to add to inventory
+                      </p>
+                    )}
+                    {isAlreadyTracked && !item.hasVariations && (
+                      <p className="mt-1 mb-0 font-['DM_Sans:Italic',sans-serif] text-[12px] text-gray-500">
+                        In your inventory · Stock: {liveTrackedStock}
                       </p>
                     )}
                   </div>
 
-                  {/* Right side - Price and Quantity */}
-                  <div className="flex flex-col items-end gap-2">
+                  {/* Price and quantity */}
+                  <div className="flex shrink-0 flex-col items-end gap-1">
                     {/* Price */}
-                    <p className={`font-['DM_Sans:Regular',sans-serif] text-[12px] ${
-                      isDimmed ? 'text-gray-400' : 'text-gray-500'
-                    }`}>
+                    <p
+                      className={`m-0 leading-none font-['DM_Sans:Regular',sans-serif] text-[12px] ${
+                        isDimmed ? 'text-gray-400' : 'text-gray-500'
+                      }`}
+                    >
                       {item.price}
                     </p>
-                    {/* Quantity pill */}
-                    <div className="px-3 py-1 bg-gray-100 rounded-full">
-                      <p className={`font-['DM_Sans:Regular',sans-serif] text-[12px] ${
-                        isDimmed ? 'text-gray-400' : 'text-gray-600'
-                      }`}>
-                        Stock: {item.quantity}
+                    {/* Quantity pill — tight leading so card bottom inset matches pt (≈16px) */}
+                    <div className="rounded-full bg-gray-100 px-2.5 py-1">
+                      <p
+                        className={`m-0 leading-none font-['DM_Sans:Regular',sans-serif] text-[12px] ${
+                          isDimmed ? 'text-gray-400' : 'text-gray-600'
+                        }`}
+                      >
+                        Stock: {displayStock}
                       </p>
                     </div>
                   </div>
@@ -406,8 +355,8 @@ export default function ChooseListings() {
           })}
         </div>
 
-        {/* Sticky bottom section */}
-        <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-4">
+        {/* Sticky bottom section — flush with phone frame (no bottom nav during onboarding) */}
+        <div className="absolute bottom-0 left-0 right-0 border-t border-gray-200 bg-white px-6 py-4">
           {/* Continue button */}
           <button
             onClick={() => {
@@ -421,10 +370,17 @@ export default function ChooseListings() {
                   quantity: item!.quantity,
                   isTopSeller: item!.isTopSeller
                 }));
-              navigate('/set-limits', { state: { selectedItems: selectedListings } });
+              navigate('/set-limits', {
+                state: {
+                  selectedItems: selectedListings,
+                  mode: isAddMode ? 'add' : undefined,
+                },
+              });
             }}
             disabled={!canContinue}
-            className={`w-full py-3 rounded-xl font-['DM_Sans:SemiBold',sans-serif] text-[14px] mb-3 ${
+            className={`w-full py-3 rounded-xl font-['DM_Sans:SemiBold',sans-serif] text-[14px] ${
+              isMaxReached ? 'mb-3' : ''
+            } ${
               canContinue
                 ? 'bg-[#1A9E8F] text-white'
                 : 'bg-gray-300 text-gray-500'

@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ChevronLeft } from 'lucide-react';
-import Group1 from '../../imports/Group1-1/Group1-27-76';
+import CornerPlaneMark from './CornerPlaneMark';
+import ScreenHeader from './ScreenHeader';
 import Base from '../../imports/Base-2/Base-36-390';
 import Pp04A from '../../imports/Pp04A/Pp04A';
 import Pp02A from '../../imports/Pp02A/Pp02A';
@@ -58,31 +59,25 @@ export default function BusinessType() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col max-w-[430px] mx-auto relative" style={{ zIndex: 0 }}>
-      {/* Base background */}
-      <div className="absolute inset-0">
-        <Base />
-      </div>
+    <div className="relative mx-auto flex h-full min-h-0 max-w-[430px] flex-col" style={{ zIndex: 0 }}>
+      <Base />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col px-6 py-12">
-        {/* Orange paper plane icon - small in top right */}
-        <div className="absolute top-6 right-6 w-[50px] h-[45px]">
-          <Group1 />
-        </div>
+      <div className="relative z-10 flex flex-col">
+        <CornerPlaneMark />
 
-        {/* Headline */}
-        <h1 className="text-center mb-3 mt-8" style={{fontFamily: "'DM Serif Display', serif"}}>
-          Where do you sell?
-        </h1>
+        <ScreenHeader>
+          <h1 className="text-center mb-3" style={{fontFamily: "'DM Serif Display', serif"}}>
+            Where do you sell?
+          </h1>
 
-        {/* Subhead */}
-        <p className="text-center text-gray-600 mb-8">
-          We'll track your inventory across every channel you choose.
-        </p>
+          <p className="text-center text-gray-600 mb-8">
+            We'll track your inventory across every channel you choose.
+          </p>
+        </ScreenHeader>
 
         {/* Channel cards */}
-        <div className="space-y-4 mb-6">
+        <div className="space-y-4 mb-6 px-6">
           {channels.map((channel) => {
             const isSelected = selectedChannels.includes(channel.id);
             const AirplaneIcon = channel.icon;
@@ -90,7 +85,7 @@ export default function BusinessType() {
               <div
                 key={channel.id}
                 onClick={() => toggleChannel(channel.id)}
-                className={`relative rounded-2xl p-5 cursor-pointer transition-colors border-2 ${
+                className={`relative rounded-2xl p-5 border-2 ${
                   isSelected
                     ? 'bg-[#EAF4F2] border-[#1A9E8F]'
                     : 'bg-white border-gray-300'
@@ -99,8 +94,14 @@ export default function BusinessType() {
               >
                 {/* Paper airplane in top-right corner when selected */}
                 {isSelected && (
-                  <div className="absolute top-5 right-5 w-[20px] h-[20px]">
-                    <AirplaneIcon />
+                  <div className="absolute right-4 top-4">
+                    <AirplaneIcon
+                      className={
+                        channel.id === 'craft-shows'
+                          ? 'h-[calc(2.25rem*0.81)] w-auto'
+                          : undefined
+                      }
+                    />
                   </div>
                 )}
 
@@ -119,12 +120,13 @@ export default function BusinessType() {
         </div>
 
         {/* Continue button */}
+        <div className="px-6">
         <button
           onClick={handleContinue}
           disabled={selectedChannels.length === 0 || (selectedChannels.includes('etsy') && selectedChannels.includes('own-shop'))}
-          className={`w-full py-4 rounded-xl font-['DM_Sans:SemiBold',sans-serif] text-[16px] transition-all mb-6 ${
+          className={`w-full py-4 rounded-xl font-['DM_Sans:SemiBold',sans-serif] text-[16px] mb-6 ${
             selectedChannels.length > 0 && !(selectedChannels.includes('etsy') && selectedChannels.includes('own-shop'))
-              ? 'bg-[#1A9E8F] text-white cursor-pointer'
+              ? 'bg-[#1A9E8F] text-white'
               : 'bg-gray-300 text-gray-500 cursor-not-allowed'
           }`}
         >
@@ -156,12 +158,13 @@ export default function BusinessType() {
             </p>
             <p
               onClick={() => navigate('/pricing')}
-              className="text-center font-['DM_Sans:Regular',sans-serif] text-[14px] text-[#1A9E8F] underline cursor-pointer"
+              className="text-center font-['DM_Sans:Regular',sans-serif] text-[14px] text-[#1A9E8F] underline"
             >
               See pricing
             </p>
           </>
         )}
+        </div>
       </div>
     </div>
   );

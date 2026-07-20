@@ -3,15 +3,15 @@
 :root {
   --font-size: 16px;
   --background: #ffffff;
-  --foreground: #1f2937;
+  --foreground: #373737;
   --card: #ffffff;
-  --card-foreground: #1f2937;
+  --card-foreground: #373737;
   --popover: #ffffff;
-  --popover-foreground: #1f2937;
+  --popover-foreground: #373737;
   --primary: #1A9E8F;
   --primary-foreground: #ffffff;
   --secondary: #f3f4f6;
-  --secondary-foreground: #1f2937;
+  --secondary-foreground: #373737;
   --muted: #f9fafb;
   --muted-foreground: #6b7280;
   --accent: #E0F5F2;
@@ -32,7 +32,7 @@
   --chart-5: #B91C1C;
   --radius: 0.75rem;
   --sidebar: #ffffff;
-  --sidebar-foreground: #1f2937;
+  --sidebar-foreground: #373737;
   --sidebar-primary: #1A9E8F;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: #E0F5F2;

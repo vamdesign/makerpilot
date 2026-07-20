@@ -1,195 +1,302 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router';
-import { Search, Plus, Target } from 'lucide-react';
-
-// Mock inventory data
-const MOCK_INVENTORY = [
-  {
-    id: '1',
-    name: 'Spaniel Bowl',
-    stock: 5,
-    threshold: 2,
-    leadTime: 21,
-    status: 'healthy',
-    showsOnly: false,
-  },
-  {
-    id: '2',
-    name: 'Tumbler - Sage',
-    stock: 3,
-    threshold: 3,
-    leadTime: 21,
-    status: 'low',
-    showsOnly: false,
-  },
-  {
-    id: '3',
-    name: 'Matcha Bowl',
-    stock: 8,
-    threshold: 3,
-    leadTime: 21,
-    status: 'healthy',
-    showsOnly: false,
-  },
-  {
-    id: '4',
-    name: 'Mushroom Dish',
-    stock: 4,
-    threshold: 2,
-    leadTime: 21,
-    status: 'healthy',
-    showsOnly: true,
-  },
-  {
-    id: '5',
-    name: 'Ring Dish - Blush',
-    stock: 1,
-    threshold: 3,
-    leadTime: 21,
-    status: 'critical',
-    showsOnly: false,
-  },
-];
-
-type FilterType = 'all' | 'low' | 'shows';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router';
+import { CheckCircle2, CirclePlus, RefreshCw } from 'lucide-react';
+import { toast } from 'sonner';
+import PageTitle from './PageTitle';
+import CardItem from './inventory/CardItem';
+import EditItemModal from './inventory/EditItemModal';
+import LowStockClockIcon from './icons/LowStockClockIcon';
+import { INVENTORY_DEMO_SEED, type InventoryRow } from '../data/inventoryDemo';
+import {
+  MAX_TRACKED_ITEMS,
+  thumbnailListingIdForCopy,
+  readTrackedFromStorage,
+  writeTrackedToStorage,
+} from '../inventory/trackedInventory';
+import { appendActivityEvent } from '../data/activityLog';
+import {
+  type InventorySortTab,
+  type InventorySortPrefs,
+  sortInventoryRows,
+} from '../inventory/inventoryUtils';
 
 export default function Inventory() {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filter, setFilter] = useState<FilterType>('all');
+  const location = useLocation();
+  const [items, setItems] = useState<InventoryRow[]>(() => {
+    const stored = readTrackedFromStorage();
+    return stored && stored.length > 0 ? stored : [...INVENTORY_DEMO_SEED];
+  });
+  const [sortTab, setSortTab] = useState<InventorySortTab>('make_now');
+  const [healthyFirst, setHealthyFirst] = useState(false);
+  const [azDesc, setAzDesc] = useState(false);
+  const [stockHighFirst, setStockHighFirst] = useState(true);
+  const [selectedItem, setSelectedItem] = useState<InventoryRow | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [swipeRevision, setSwipeRevision] = useState(0);
+  const [syncState, setSyncState] = useState<'idle' | 'syncing' | 'done'>('idle');
+  const skipPersistRef = useRef(true);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'critical':
-        return 'bg-critical';
-      case 'low':
-        return 'bg-warn';
-      default:
-        return 'bg-green-500';
+  useEffect(() => {
+    if (location.pathname !== '/inventory') return;
+    const stored = readTrackedFromStorage();
+    if (stored && stored.length > 0) {
+      skipPersistRef.current = true;
+      setItems(stored);
     }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (location.pathname !== '/inventory') return;
+    const reopenId = (location.state as { reopenEditItemId?: number } | null)?.reopenEditItemId;
+    if (reopenId == null) return;
+
+    const row = items.find((item) => item.id === reopenId);
+    if (row) {
+      setSelectedItem(row);
+      setSheetOpen(true);
+    }
+    navigate('/inventory', { replace: true, state: {} });
+  }, [location.pathname, location.state, items, navigate]);
+
+  useEffect(() => {
+    if (skipPersistRef.current) {
+      skipPersistRef.current = false;
+      return;
+    }
+    writeTrackedToStorage(items);
+  }, [items]);
+
+  const sortPrefs: InventorySortPrefs = useMemo(
+    () => ({
+      tab: sortTab,
+      azDesc,
+      stockHighFirst,
+      healthyFirst,
+    }),
+    [sortTab, azDesc, stockHighFirst, healthyFirst],
+  );
+
+  const handleSortTap = useCallback((tab: InventorySortTab) => {
+    if (tab === 'make_now') {
+      setSortTab('make_now');
+      setHealthyFirst((prev) => (sortTab === 'make_now' ? !prev : prev));
+      return;
+    }
+    if (tab === 'az') {
+      setSortTab('az');
+      setAzDesc((prev) => (sortTab === 'az' ? !prev : prev));
+      return;
+    }
+    setSortTab('stock');
+    setStockHighFirst((prev) => (sortTab === 'stock' ? !prev : prev));
+  }, [sortTab]);
+
+  const displayItems = useMemo(() => sortInventoryRows([...items], sortPrefs), [items, sortPrefs]);
+
+  const openEdit = useCallback((item: InventoryRow) => {
+    setSwipeRevision((r) => r + 1);
+    setSelectedItem(item);
+    setSheetOpen(true);
+  }, []);
+
+  const handleSave = (next: InventoryRow) => {
+    setItems((prev) => prev.map((row) => (row.id === next.id ? next : row)));
+    setSelectedItem(null);
   };
 
-  const filteredInventory = MOCK_INVENTORY.filter((item) => {
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter =
-      filter === 'all' ||
-      (filter === 'low' && (item.status === 'low' || item.status === 'critical')) ||
-      (filter === 'shows' && item.showsOnly);
-    return matchesSearch && matchesFilter;
-  });
+  const handleDelete = (id: number) => {
+    setItems((prev) => {
+      const removed = prev.find((row) => row.id === id);
+      if (removed) {
+        appendActivityEvent({
+          type: 'item_deleted',
+          itemId: removed.id,
+          itemTitle: removed.title,
+          detail: 'Removed from inventory',
+          timestamp: Date.now(),
+        });
+      }
+      return prev.filter((row) => row.id !== id);
+    });
+    setSelectedItem(null);
+  };
+
+  const handleCopy = useCallback(
+    (item: InventoryRow) => {
+      if (items.length >= MAX_TRACKED_ITEMS) {
+        toast.error('Tracked item limit reached');
+        return;
+      }
+      setSwipeRevision((r) => r + 1);
+      navigate('/duplicate-item', {
+        state: {
+          title: item.title,
+          stock: item.stock,
+          alertThreshold: item.alertThreshold,
+          leadTime: item.leadTime,
+          leadTimeUnit: item.leadTimeUnit,
+          price: item.price,
+          showPrice: item.showPrice,
+          isTopSeller: item.isTopSeller ?? false,
+          thumbnailListingId: thumbnailListingIdForCopy(item),
+        },
+      });
+    },
+    [items.length, navigate],
+  );
+
+  const goAddItem = () => {
+    if (items.length >= MAX_TRACKED_ITEMS) return;
+    navigate('/add-item');
+  };
+
+  const handleSync = async () => {
+    if (syncState !== 'idle') return;
+    setSyncState('syncing');
+    await new Promise((r) => setTimeout(r, 1400));
+    setSyncState('done');
+    await new Promise((r) => setTimeout(r, 1800));
+    setSyncState('idle');
+  };
+
+  const makeNowArrow = sortTab === 'make_now' ? (healthyFirst ? '↑' : '↓') : '↓';
+  const qtyArrow = sortTab === 'stock' ? (stockHighFirst ? '↓' : '↑') : '↓';
+  const azLabel = sortTab === 'az' ? (azDesc ? 'Z–A' : 'A–Z') : 'A–Z';
+  const atTrackLimit = items.length >= MAX_TRACKED_ITEMS;
 
   return (
-    <div className="min-h-screen pb-24 max-w-[430px] mx-auto bg-[#E5F0F0]">
-      {/* Header */}
-      <div className="bg-teal text-white px-6 py-8 rounded-b-3xl">
-        <h1 className="mb-6" style={{fontFamily: "'DM Serif Display', serif"}}>Inventory</h1>
+    <div className="relative isolate mx-auto flex h-full min-h-0 max-w-[430px] flex-col bg-white">
+      <PageTitle title="Inventory" compact extendedFade />
 
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-teal-dark" size={20} />
-          <input
-            type="text"
-            placeholder="Search items..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white text-gray-900 pl-11 pr-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-light"
-          />
-        </div>
-      </div>
-
-      <div className="px-6">
-        {/* Filter chips */}
-        <div className="flex gap-2 mt-6 mb-4">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col">
+        <div className="flex items-center justify-between px-4 pb-1 pt-3">
           <button
-            onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-full transition-colors ${
-              filter === 'all'
-                ? 'bg-teal text-white'
-                : 'bg-gray-100 text-gray-600'
+            type="button"
+            onClick={() => handleSync()}
+            disabled={syncState !== 'idle'}
+            className={`flex items-center gap-1.5 font-['DM_Sans:SemiBold',sans-serif] text-[13px] text-[#1A9E8F] ${
+              syncState !== 'idle' ? 'pointer-events-none' : ''
             }`}
           >
-            All
+            {syncState === 'idle' && (
+              <>
+                <RefreshCw size={14} strokeWidth={2.25} />
+                Sync
+              </>
+            )}
+            {syncState === 'syncing' && (
+              <>
+                <RefreshCw size={14} strokeWidth={2.25} className="animate-spin" />
+                Syncing…
+              </>
+            )}
+            {syncState === 'done' && (
+              <>
+                <CheckCircle2 size={14} strokeWidth={2.25} className="text-[#1A9E8F]" aria-hidden />
+                Synced
+              </>
+            )}
           </button>
-          <button
-            onClick={() => setFilter('low')}
-            className={`px-4 py-2 rounded-full transition-colors ${
-              filter === 'low'
-                ? 'bg-warn text-white'
-                : 'bg-gray-100 text-gray-600'
-            }`}
-          >
-            Low Stock
-          </button>
-          <button
-            onClick={() => setFilter('shows')}
-            className={`px-4 py-2 rounded-full transition-colors flex items-center gap-1 ${
-              filter === 'shows'
-                ? 'bg-teal text-white'
-                : 'bg-gray-100 text-gray-600'
-            }`}
-          >
-            <Target size={16} />
-            Shows
-          </button>
-        </div>
-
-        {/* Inventory list */}
-        <div className="space-y-3 mb-6">
-          {filteredInventory.map((item) => (
+          <div className="flex flex-wrap items-center justify-end gap-x-1 gap-y-1">
             <button
-              key={item.id}
-              onClick={() => navigate(`/inventory/${item.id}`)}
-              className="w-full bg-white border border-gray-200 rounded-xl p-4 transition-colors text-left"
+              type="button"
+              onClick={goAddItem}
+              disabled={atTrackLimit}
+              className={`flex min-h-[44px] items-center gap-1.5 font-['DM_Sans:SemiBold',sans-serif] text-[13px] ${
+                atTrackLimit
+                  ? 'cursor-default text-gray-300 [&_svg]:text-gray-300'
+                  : 'text-[#1A9E8F]'
+              }`}
             >
-              <div className="flex items-center gap-4">
-                {/* Status dot */}
-                <div className={`w-3 h-3 rounded-full ${getStatusColor(item.status)}`}></div>
-
-                {/* Item info */}
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="text-base">{item.name}</h3>
-                    {item.showsOnly && (
-                      <span className="bg-teal-light text-teal text-xs px-2 py-0.5 rounded-full flex items-center gap-1">
-                        <Target size={12} />
-                        Shows
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
-                    <span>Stock: {item.stock}</span>
-                    <span>•</span>
-                    <span>Alert at: {item.threshold}</span>
-                    <span>•</span>
-                    <span className="text-xs bg-gray-100 px-2 py-0.5 rounded">
-                      {item.leadTime}d lead
-                    </span>
-                  </div>
-                </div>
-
-                {/* Stock count */}
-                <div className="text-right">
-                  <p className="text-2xl">{item.stock}</p>
-                </div>
-              </div>
+              <CirclePlus size={15} strokeWidth={2} />
+              Add
             </button>
-          ))}
+            {atTrackLimit && (
+              <button
+                type="button"
+                onClick={() => navigate('/pricing')}
+                className="font-['DM_Sans:Regular',sans-serif] text-[11px] leading-none text-[#1A9E8F] underline"
+              >
+                Upgrade
+              </button>
+            )}
+          </div>
         </div>
 
-        {filteredInventory.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
-            <p>No items found</p>
+        <div className="flex shrink-0 flex-wrap items-center justify-center gap-2 border-b border-gray-100 px-4 py-4">
+            <button
+              type="button"
+              onClick={() => handleSortTap('make_now')}
+              className={`flex items-center gap-1 rounded-full border px-3 py-2 font-['DM_Sans:SemiBold',sans-serif] text-[12px] ${
+                sortTab === 'make_now'
+                  ? 'border-[#1A9E8F] bg-[#1A9E8F] text-white'
+                  : 'border-gray-300 bg-white text-gray-600'
+              }`}
+            >
+              <LowStockClockIcon
+                className={`size-3 shrink-0 ${sortTab === 'make_now' ? 'text-white' : 'text-[#FF6600]'}`}
+                aria-hidden
+              />
+              Make now{' '}
+              <span aria-hidden>{makeNowArrow}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSortTap('az')}
+              className={`rounded-full border px-3 py-2 font-['DM_Sans:SemiBold',sans-serif] text-[12px] ${
+                sortTab === 'az'
+                  ? 'border-[#1A9E8F] bg-[#1A9E8F] text-white'
+                  : 'border-gray-300 bg-white text-gray-600'
+              }`}
+            >
+              {azLabel}
+            </button>
+            <button
+              type="button"
+              onClick={() => handleSortTap('stock')}
+              className={`rounded-full border px-3 py-2 font-['DM_Sans:SemiBold',sans-serif] text-[12px] ${
+                sortTab === 'stock'
+                  ? 'border-[#1A9E8F] bg-[#1A9E8F] text-white'
+                  : 'border-gray-300 bg-white text-gray-600'
+              }`}
+            >
+              Qty {qtyArrow}
+            </button>
+        </div>
+
+        <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-28">
+          <div className="flex flex-col gap-3 pt-3">
+            {displayItems.map((item) => (
+              <CardItem
+                key={item.id}
+                item={item}
+                swipeRevision={swipeRevision}
+                onOpen={() => openEdit(item)}
+                onDelete={() => handleDelete(item.id)}
+                onCopy={() => handleCopy(item)}
+              />
+            ))}
           </div>
-        )}
+
+          {displayItems.length === 0 && (
+            <p className="py-12 text-center font-['DM_Sans:Regular',sans-serif] text-[14px] text-gray-500">
+              No items tracked yet.
+            </p>
+          )}
+        </div>
       </div>
 
-      {/* FAB */}
-      <button
-        onClick={() => navigate('/add-item')}
-        className="fixed right-6 bottom-24 bg-teal text-white p-4 rounded-full shadow-lg transition-colors"
-      >
-        <Plus size={28} strokeWidth={2.5} />
-      </button>
+      <EditItemModal
+        open={sheetOpen}
+        item={selectedItem}
+        onOpenChange={(open) => {
+          setSheetOpen(open);
+          if (!open) setSelectedItem(null);
+        }}
+        onSave={handleSave}
+        onDelete={handleDelete}
+      />
     </div>
   );
 }

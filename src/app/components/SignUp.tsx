@@ -40,7 +40,7 @@ function Button() {
   const navigate = useNavigate();
   return (
     <div className="absolute contents left-[64px] top-[547px]" data-name="Button">
-      <div onClick={() => navigate('/business-type')} className="absolute bg-[#1a9e8f] h-[50px] left-[64px] rounded-[12px] top-[547px] w-[266px] cursor-pointer[#158f80] transition-colors" />
+      <div onClick={() => navigate('/business-type')} className="absolute bg-[#1a9e8f] h-[50px] left-[64px] rounded-[12px] top-[547px] w-[266px]" />
       <p className="-translate-x-1/2 absolute font-['DM_Sans:SemiBold',sans-serif] leading-[normal] left-[calc(50%+1px)] not-italic text-[16px] text-center text-white top-[562px] whitespace-nowrap pointer-events-none">Sign up</p>
     </div>
   );
@@ -141,7 +141,7 @@ function Group5({ showPassword }: { showPassword: boolean }) {
 
 function EyeIcon({ showPassword, onClick }: { showPassword: boolean; onClick: () => void }) {
   return (
-    <div onClick={onClick} className="absolute left-[305px] top-[494px] cursor-pointer transition-opacity z-30" data-name="eye">
+    <div onClick={onClick} className="absolute left-[305px] top-[494px] z-30" data-name="eye">
       {showPassword ? (
         <EyeOff size={18} className="text-[#6A7282]" />
       ) : (
@@ -251,7 +251,7 @@ export default function SignUp() {
       </div>
       <Logo />
       <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-white h-[486px] left-[calc(50%+0.5px)] rounded-[6px] shadow-[0px_4px_4px_0px_rgba(0,0,0,0.25)] top-[calc(50%+55px)] w-[314px]" />
-      <p onClick={() => navigate('/signin')} className="-translate-x-1/2 absolute font-['DM_Sans:SemiBold',sans-serif] leading-[normal] left-[calc(50%+1px)] not-italic text-[#399] text-[14px] text-center top-[682px] whitespace-nowrap cursor-pointer">Already have an account? Log in.</p>
+      <p onClick={() => navigate('/signin')} className="-translate-x-1/2 absolute font-['DM_Sans:SemiBold',sans-serif] leading-[normal] left-[calc(50%+1px)] not-italic text-[#399] text-[14px] text-center top-[682px] whitespace-nowrap">Already have an account? Log in.</p>
       <Button />
       <Group2 />
       <div className="absolute flex h-[64.879px] items-center justify-center left-[262.62px] top-[204.9px] w-[78.277px]" style={{ "--transform-inner-width": "1200", "--transform-inner-height": "19" } as React.CSSProperties}>
@@ -274,7 +274,7 @@ export default function SignUp() {
         <span className="font-['DM_Sans:Regular',sans-serif] leading-[normal]">{`By continuing, you agree to MakerPilot's `}</span>
         <span
           onClick={() => setShowTermsModal(true)}
-          className="decoration-solid font-['DM_Sans:Regular',sans-serif] leading-[normal] text-[#1a9e8f] underline cursor-pointer[#158f80]"
+          className="decoration-solid font-['DM_Sans:Regular',sans-serif] leading-[normal] text-[#1a9e8f] underline"
         >{`Terms & Conditions`}</span>
         <span className="font-['DM_Sans:Regular',sans-serif] leading-[normal]">{` and Privacy Policy.`}</span>
       </p>

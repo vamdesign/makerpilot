@@ -39,7 +39,7 @@ function Button() {
   const navigate = useNavigate();
   return (
     <div className="absolute contents left-[64px] top-[459px]" data-name="Button">
-      <div onClick={() => navigate('/business-type')} className="absolute bg-[#1a9e8f] h-[50px] left-[64px] rounded-[12px] top-[459px] w-[266px] cursor-pointer[#158f80] transition-colors" />
+      <div onClick={() => navigate('/business-type')} className="absolute bg-[#1a9e8f] h-[50px] left-[64px] rounded-[12px] top-[459px] w-[266px]" />
       <p className="-translate-x-1/2 absolute font-['DM_Sans:SemiBold',sans-serif] leading-[normal] left-[calc(50%+1px)] not-italic text-[16px] text-center text-white top-[474px] whitespace-nowrap pointer-events-none">Sign in</p>
     </div>
   );
@@ -104,7 +104,7 @@ function Group1({ showPassword }: { showPassword: boolean }) {
 
 function EyeIcon({ showPassword, onClick }: { showPassword: boolean; onClick: () => void }) {
   return (
-    <div onClick={onClick} className="absolute left-[305px] top-[398px] cursor-pointer transition-opacity z-30" data-name="eye">
+    <div onClick={onClick} className="absolute left-[305px] top-[398px] z-30" data-name="eye">
       {showPassword ? (
         <EyeOff size={18} className="text-[#6A7282]" />
       ) : (
@@ -220,8 +220,8 @@ export default function SignIn() {
         </div>
       </div>
       <Button />
-      <p onClick={() => navigate('/signup')} className="-translate-x-1/2 absolute font-['DM_Sans:SemiBold',sans-serif] leading-[normal] left-[calc(50%-1px)] not-italic text-[#399] text-[14px] text-center top-[584px] whitespace-nowrap cursor-pointer">Sign Up</p>
-      <p className="-translate-x-1/2 absolute font-['DM_Sans:SemiBold',sans-serif] leading-[normal] left-[calc(50%-0.5px)] not-italic text-[#989da4] text-[14px] text-center top-[540px] whitespace-nowrap cursor-pointer[#1a9e8f]">Forgot password?</p>
+      <p onClick={() => navigate('/signup')} className="-translate-x-1/2 absolute font-['DM_Sans:SemiBold',sans-serif] leading-[normal] left-[calc(50%-1px)] not-italic text-[#399] text-[14px] text-center top-[584px] whitespace-nowrap">Sign Up</p>
+      <p className="-translate-x-1/2 absolute font-['DM_Sans:SemiBold',sans-serif] leading-[normal] left-[calc(50%-0.5px)] not-italic text-[#989da4] text-[14px] text-center top-[540px] whitespace-nowrap">Forgot password?</p>
       <Group2 />
       <Group3 showPassword={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} />
     </div>

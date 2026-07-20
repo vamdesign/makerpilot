@@ -1,19 +1,32 @@
-import svgPaths from "./svg-hsh1szh7up";
+type ChannelPlaneIconProps = {
+  className?: string;
+};
 
-export default function Pp02A() {
+export default function Pp02A({ className = 'h-9 w-auto' }: ChannelPlaneIconProps) {
   return (
-    <div className="relative size-full" data-name="PP02a">
-      <svg className="absolute block inset-0 size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 80 69">
-        <g clipPath="url(#clip0_29_198)" id="PP02a">
-          <path d={svgPaths.p1ece3800} fill="var(--fill-0, white)" id="Vector 1" />
-          <path d={svgPaths.p3d60500} fill="var(--fill-0, #FF6600)" id="Vector 1 (Stroke)" />
-        </g>
-        <defs>
-          <clipPath id="clip0_29_198">
-            <rect fill="white" height="69" width="80" />
-          </clipPath>
-        </defs>
-      </svg>
-    </div>
+    <svg
+      className={className}
+      viewBox="0 0 80 69"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+      data-name="Pp02A"
+    >
+      <g clipPath="url(#clip_pp02)">
+        <path
+          d="M52.8614 55.4653L56.0764 43.442L75.4392 35.0797L10.1881 3.1577L27.4765 61.4091L46.3045 48.975L52.8614 55.4653Z"
+          fill="white"
+        />
+        <path
+          d="M26.9017 62.9866L46.1787 50.2563L53.3822 57.3883L56.9174 44.168L77.8306 35.1366L8.58153 1.25845L26.9017 62.9866ZM47.7438 46.826L29.0398 59.1794L35.3343 32.8939L47.7438 46.826ZM33.7138 31.0745L27.3738 57.5453L12.4235 7.17009L33.7138 31.0745ZM54.9505 43.784L52.6447 52.4078L50.1772 46.6315L50.1138 46.4815L50.0044 46.3598L39.6617 34.7457L40.7259 31.2954L54.9505 43.784ZM49.9391 51.1647L47.884 49.1301L48.8097 48.519L49.9391 51.1647ZM56.2607 42.2732L43.4778 31.05L71.8742 35.53L56.2607 42.2732ZM39.0784 29.8495L38.107 33.0001L21.7619 14.6479L39.0784 29.8495ZM69.025 33.0552L40.667 28.5823L16.4764 7.34731L69.025 33.0552Z"
+          fill="#FF6600"
+        />
+      </g>
+      <defs>
+        <clipPath id="clip_pp02">
+          <rect width="80" height="69" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
   );
 }

@@ -1,170 +1,256 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ChevronLeft, Plus, Minus, Camera } from 'lucide-react';
+import { Minus, Plus } from 'lucide-react';
 import { toast } from 'sonner';
+import type { LeadTimeUnit } from '../data/inventoryDemo';
+import PageTitle from './PageTitle';
+import { cardBorderTouchable } from './cardBorder';
+import {
+  StepperSuffixText,
+  STEPPER_BTN_CLASS,
+  STEPPER_LABEL_CLASS,
+  STEPPER_VALUE_CLASS,
+} from './inventory/StepperControlRow';
+import { appendManualTrackedItem } from '../inventory/trackedInventory';
+import { appendActivityEvent } from '../data/activityLog';
+import GenericItemPlaceholder from './icons/GenericItemPlaceholder';
+
+function readDefaultLeadFromStorage(): { time: number; unit: LeadTimeUnit } {
+  const raw = localStorage.getItem('defaultLeadTime');
+  const n = raw ? parseInt(raw, 10) : NaN;
+  if (Number.isFinite(n) && n > 0) return { time: n, unit: 'days' };
+  return { time: 2, unit: 'weeks' };
+}
+
+type TimeUnit = LeadTimeUnit;
+
+function LeadTimeUnitButton({ unit, onCycle }: { unit: TimeUnit; onCycle: () => void }) {
+  const label = unit === 'days' ? 'Day' : unit === 'weeks' ? 'Wks' : 'Mnth';
+  return (
+    <button
+      type="button"
+      onClick={onCycle}
+      className="flex h-9 w-full max-w-[72px] shrink-0 items-center justify-center gap-1 rounded-full border border-[#1A9E8F] bg-[#E6F4F2] px-2 py-1.5"
+    >
+      <span className="font-['DM_Sans:SemiBold',sans-serif] text-[12px] text-[#1A9E8F]">
+        {label}
+      </span>
+      <div className="-space-y-1.5 flex flex-col items-center justify-center leading-none [&_svg]:block [&_svg]:shrink-0">
+        <svg className="h-2.5 w-2.5 text-[#1A9E8F]" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L10 6.414l-3.293 3.293a1 1 0 01-1.414 0z" />
+        </svg>
+        <svg className="h-2.5 w-2.5 text-[#1A9E8F]" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L10 13.586l3.293-3.293a1 1 0 011.414 0z" />
+        </svg>
+      </div>
+    </button>
+  );
+}
 
 export default function AddItem() {
   const navigate = useNavigate();
   const [itemName, setItemName] = useState('');
   const [stock, setStock] = useState(0);
-  const [leadTime, setLeadTime] = useState(parseInt(localStorage.getItem('defaultLeadTime') || '21'));
+  const [leadInit] = useState(readDefaultLeadFromStorage);
+  const [leadTime, setLeadTime] = useState(leadInit.time);
+  const [leadUnit, setLeadUnit] = useState<LeadTimeUnit>(leadInit.unit);
   const [price, setPrice] = useState('');
   const [threshold, setThreshold] = useState(3);
   const [showsOnly, setShowsOnly] = useState(false);
 
+  const cycleLeadUnit = () => {
+    const units: TimeUnit[] = ['days', 'weeks', 'months'];
+    const idx = units.indexOf(leadUnit);
+    setLeadUnit(units[(idx + 1) % units.length]);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock save - in real app would save to backend
+    const title = itemName.trim();
+    if (!title) {
+      toast.error('Enter an item name');
+      return;
+    }
+
+    const saved = appendManualTrackedItem({
+      title,
+      stock,
+      alertThreshold: threshold,
+      leadTime,
+      leadTimeUnit: leadUnit,
+      price,
+    });
+
+    if (!saved) {
+      toast('10-item limit reached for this MVP.', {
+        description: 'Remove an item to add another.',
+      });
+      return;
+    }
+
+    appendActivityEvent({
+      type: 'item_added',
+      itemId: saved.id,
+      itemTitle: saved.title,
+      detail: `Stock ${stock}`,
+      timestamp: Date.now(),
+    });
+
     toast.success('Item added successfully!');
     navigate('/inventory');
   };
 
   return (
-    <div className="min-h-screen pb-24 max-w-[430px] mx-auto bg-[#E5F0F0]">
-      {/* Header */}
-      <div className="bg-teal text-white px-6 py-6 rounded-b-3xl">
-        <button
-          onClick={() => navigate('/inventory')}
-          className="flex items-center gap-2 mb-4 transition-opacity"
-        >
-          <ChevronLeft size={20} />
-          <span>Back</span>
-        </button>
-        <h1 style={{fontFamily: "'DM Serif Display', serif"}}>Add New Item</h1>
+    <div className="relative isolate mx-auto flex h-full min-h-0 max-w-[393px] flex-col bg-white">
+      <div className="shrink-0">
+        <PageTitle compact title="Add item" subtitle="Enter details for a new listing." />
       </div>
 
-      <form onSubmit={handleSubmit} className="px-6 mt-6">
-        {/* Photo upload */}
-        <div className="mb-6">
-          <label className="block mb-2">Item Photo</label>
-          <button
-            type="button"
-            className="w-full h-48 bg-gray-100 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center gap-2/20 transition-colors"
-          >
-            <Camera size={32} className="text-gray-400" />
-            <span className="text-sm text-gray-500">Tap to add photo</span>
-          </button>
-        </div>
-
+      <form
+        onSubmit={handleSubmit}
+        className="relative z-10 min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-4 pb-28 pt-3"
+      >
         {/* Item name */}
-        <div className="mb-5">
-          <label htmlFor="itemName" className="block mb-2">
-            Item Name *
+        <div className="mb-4">
+          <label
+            htmlFor="itemName"
+            className="mb-2 block font-['DM_Sans:SemiBold',sans-serif] text-[13px] text-gray-700"
+          >
+            Item name
           </label>
           <input
             type="text"
             id="itemName"
             value={itemName}
             onChange={(e) => setItemName(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal"
-            placeholder="e.g., Spaniel Bowl"
+            className="min-h-11 w-full rounded-xl border border-[#E5E7EB] bg-white px-4 py-3 font-['DM_Sans:Regular',sans-serif] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1A9E8F]"
+            placeholder="Describe your item"
             required
           />
         </div>
 
-        {/* Stock count */}
-        <div className="mb-5">
-          <label className="block mb-2">Starting Stock Count *</label>
-          <div className="flex items-center gap-3">
+        {/* Stock + limits — same row pattern as Set limits */}
+        <div className={`mb-4 rounded-2xl bg-white p-4 ${cardBorderTouchable}`}>
+          <div className="mb-3 flex items-center gap-3">
+            <span className={STEPPER_LABEL_CLASS}>Current stock</span>
             <button
               type="button"
+              className={STEPPER_BTN_CLASS}
               onClick={() => setStock(Math.max(0, stock - 1))}
-              className="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center transition-colors"
             >
-              <Minus size={24} />
+              <Minus size={16} className="text-gray-600" />
             </button>
-            <div className="flex-1 bg-teal-light/30 border-2 border-teal rounded-xl py-3 text-center">
-              <span className="text-3xl">{stock}</span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setStock(stock + 1)}
-              className="w-14 h-14 bg-teal text-white rounded-xl flex items-center justify-center transition-colors"
-            >
-              <Plus size={24} />
+            <span className={STEPPER_VALUE_CLASS}>{stock}</span>
+            <button type="button" className={STEPPER_BTN_CLASS} onClick={() => setStock(stock + 1)}>
+              <Plus size={16} className="text-gray-600" />
             </button>
           </div>
-        </div>
+          <div className="mb-3 flex flex-wrap items-center gap-3">
+            <span className={STEPPER_LABEL_CLASS}>Notify me when</span>
+            <button
+              type="button"
+              className={STEPPER_BTN_CLASS}
+              onClick={() => setThreshold((t) => Math.max(0, t - 1))}
+            >
+              <Minus size={16} className="text-gray-600" />
+            </button>
+            <span className={STEPPER_VALUE_CLASS}>{threshold}</span>
+            <button type="button" className={STEPPER_BTN_CLASS} onClick={() => setThreshold((t) => t + 1)}>
+              <Plus size={16} className="text-gray-600" />
+            </button>
+            <StepperSuffixText>In stock</StepperSuffixText>
+          </div>
+          <div className="mb-4 flex flex-wrap items-center gap-3">
+            <span className={STEPPER_LABEL_CLASS}>Time to make</span>
+            <button
+              type="button"
+              className={STEPPER_BTN_CLASS}
+              onClick={() => setLeadTime(Math.max(1, leadTime - 1))}
+            >
+              <Minus size={16} className="text-gray-600" />
+            </button>
+            <span className={STEPPER_VALUE_CLASS}>{leadTime}</span>
+            <button type="button" className={STEPPER_BTN_CLASS} onClick={() => setLeadTime(leadTime + 1)}>
+              <Plus size={16} className="text-gray-600" />
+            </button>
+            <LeadTimeUnitButton unit={leadUnit} onCycle={cycleLeadUnit} />
+          </div>
 
-        {/* Lead time */}
-        <div className="mb-5">
-          <label htmlFor="leadTime" className="block mb-2">
-            Production Lead Time (days)
-          </label>
-          <input
-            type="number"
-            id="leadTime"
-            value={leadTime}
-            onChange={(e) => setLeadTime(parseInt(e.target.value) || 0)}
-            className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal"
-            min="1"
-          />
-          <p className="text-xs text-gray-500 mt-1">From your onboarding settings</p>
-        </div>
-
-        {/* Alert threshold */}
-        <div className="mb-5">
-          <label htmlFor="threshold" className="block mb-2">
-            Low Stock Alert Threshold
-          </label>
-          <input
-            type="number"
-            id="threshold"
-            value={threshold}
-            onChange={(e) => setThreshold(parseInt(e.target.value) || 0)}
-            className="w-full px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal"
-            min="1"
-          />
-          <p className="text-xs text-gray-500 mt-1">Alert when stock reaches this level</p>
-        </div>
-
-        {/* Optional: Price */}
-        <div className="mb-5">
-          <label htmlFor="price" className="block mb-2">
+          <label
+            htmlFor="price"
+            className="mb-2 block font-['DM_Sans:SemiBold',sans-serif] text-[13px] text-gray-700"
+          >
             Price (optional)
           </label>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 font-['DM_Sans:Regular',sans-serif] text-[14px] text-gray-500">
+              $
+            </span>
             <input
-              type="number"
+              type="text"
+              inputMode="decimal"
               id="price"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              className="w-full pl-8 pr-4 py-3 rounded-lg bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal"
+              className="min-h-11 w-full rounded-xl border border-[#E5E7EB] py-3 pl-8 pr-4 font-['DM_Sans:Regular',sans-serif] text-[14px] focus:outline-none focus:ring-2 focus:ring-[#1A9E8F]"
               placeholder="0.00"
-              step="0.01"
             />
           </div>
         </div>
 
         {/* Shows only toggle */}
-        <div className="mb-6 flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+        <div className={`mb-4 flex items-center justify-between rounded-2xl bg-white p-4 ${cardBorderTouchable}`}>
           <div>
-            <p className="text-sm">Shows Only</p>
-            <p className="text-xs text-gray-500 mt-0.5">Only sold at craft shows/markets</p>
+            <p className="font-['DM_Sans:SemiBold',sans-serif] text-[14px] text-gray-900">Shows only</p>
+            <p className="mt-0.5 font-['DM_Sans:Regular',sans-serif] text-[12px] text-gray-500">
+              Only sold at craft shows/markets
+            </p>
           </div>
           <button
             type="button"
             onClick={() => setShowsOnly(!showsOnly)}
-            className={`w-14 h-8 rounded-full transition-colors relative ${
-              showsOnly ? 'bg-teal' : 'bg-gray-300'
-            }`}
+            className={`relative h-8 w-14 rounded-full ${showsOnly ? 'bg-[#1A9E8F]' : 'bg-gray-300'}`}
             style={{ zIndex: 0 }}
           >
             <div
-              className={`absolute top-1 w-6 h-6 bg-white rounded-full transition-transform ${
+              className={`absolute top-1 h-6 w-6 rounded-full bg-white transition-transform ${
                 showsOnly ? 'translate-x-7' : 'translate-x-1'
               }`}
-            ></div>
+            />
           </button>
         </div>
 
-        {/* Save button */}
+        {/* Photo upload — last, optional; default is paper-plane placeholder */}
+        <div className="mb-6">
+          <label className="mb-2 block font-['DM_Sans:SemiBold',sans-serif] text-[13px] text-gray-700">
+            Item photo (optional)
+          </label>
+          <button
+            type="button"
+            className="flex w-full flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-[#E5E7EB] bg-white py-6"
+            onClick={() => toast.message('Photo upload coming soon')}
+          >
+            <div className="h-24 w-24 overflow-hidden rounded-xl [&_img]:size-full [&_img]:object-contain [&_svg]:size-full">
+              <GenericItemPlaceholder />
+            </div>
+            <span className="rounded-xl bg-white/70 px-3 py-2 font-['DM_Sans:Regular',sans-serif] text-[13px] text-gray-600">
+              Tap to add photo
+            </span>
+          </button>
+        </div>
+
         <button
           type="submit"
-          className="w-full bg-teal text-white py-4 rounded-xl transition-colors mb-6"
+          className="mb-3 w-full rounded-xl bg-[#1A9E8F] py-4 font-['DM_Sans:SemiBold',sans-serif] text-[14px] text-white"
         >
-          Save Item
+          Save item
+        </button>
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="mb-6 min-h-[44px] w-full font-['DM_Sans:Regular',sans-serif] text-[14px] text-gray-400 active:text-gray-600"
+        >
+          Cancel
         </button>
       </form>
     </div>
