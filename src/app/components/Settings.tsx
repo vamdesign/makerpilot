@@ -2,10 +2,74 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ChevronRight } from 'lucide-react';
 import PageTitle from './PageTitle';
+import { readPrimaryChannel, readTrackedFromStorage } from '../inventory/trackedInventory';
+import { INVENTORY_DEMO_SEED } from '../data/inventoryDemo';
+import type { InventoryChannel } from '../data/inventoryDemo';
+
+const STORE_CHANNEL_LABELS: Record<Exclude<InventoryChannel, 'manual'>, string> = {
+  etsy: 'Etsy',
+  shopify: 'Shopify',
+  wix: 'Wix',
+  square: 'Square',
+};
+
+const STORE_CHANNEL_ORDER: Exclude<InventoryChannel, 'manual'>[] = [
+  'etsy',
+  'shopify',
+  'wix',
+  'square',
+];
+
+function getChannelsSubtext(): string {
+  const items = readTrackedFromStorage() ?? INVENTORY_DEMO_SEED;
+  const itemsCarryChannel = items.some((item) => item.channel != null);
+
+  if (itemsCarryChannel) {
+    const activeStore = new Set<Exclude<InventoryChannel, 'manual'>>();
+    let hasInPerson = false;
+
+    for (const item of items) {
+      const channel = item.channel ?? 'manual';
+      if (channel === 'manual') {
+        hasInPerson = true;
+      } else {
+        activeStore.add(channel);
+      }
+    }
+
+    const labels: string[] = [];
+    for (const channel of STORE_CHANNEL_ORDER) {
+      if (activeStore.has(channel)) {
+        labels.push(STORE_CHANNEL_LABELS[channel]);
+      }
+    }
+    if (hasInPerson) labels.push('In Person Sales');
+
+    return labels.length > 0 ? labels.join(', ') : 'None';
+  }
+
+  const labels: string[] = [];
+  const primary = readPrimaryChannel();
+  if (primary !== 'manual') {
+    labels.push(STORE_CHANNEL_LABELS[primary]);
+  }
+
+  try {
+    const salesChannels = JSON.parse(localStorage.getItem('salesChannels') || '[]') as string[];
+    if (salesChannels.includes('craft-shows')) {
+      labels.push('In Person Sales');
+    }
+  } catch {
+    /* ignore */
+  }
+
+  return labels.length > 0 ? labels.join(', ') : 'None';
+}
 
 export default function Settings() {
   const navigate = useNavigate();
   const [pushNotifications, setPushNotifications] = useState(true);
+  const channelsSubtext = getChannelsSubtext();
 
   const handleLogout = () => {
     localStorage.clear();
@@ -37,6 +101,13 @@ export default function Settings() {
             </div>
             <ChevronRight size={20} className="text-gray-400" />
           </button>
+
+          <div className="p-4">
+            <div className="text-left">
+              <p className="text-sm">Channels:</p>
+              <p className="text-xs text-gray-500">{channelsSubtext}</p>
+            </div>
+          </div>
 
           <div className="flex items-center justify-between p-4">
             <div>
