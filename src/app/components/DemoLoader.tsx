@@ -7,6 +7,7 @@ import {
 } from '../inventory/trackedInventory';
 import { INVENTORY_DEMO_SEED } from '../data/inventoryDemo';
 import { seedActivityLogIfEmpty } from '../data/activityLog';
+import { seedSalesHistory } from '../data/salesHistory';
 
 const ACTIVITY_LOG_KEY = 'makerpilotActivityLog';
 const SALES_CHANNELS_KEY = 'salesChannels';
@@ -30,6 +31,7 @@ export default function DemoLoader() {
     // Write the populated inventory + activity log
     writeTrackedToStorage(INVENTORY_DEMO_SEED);
     seedActivityLogIfEmpty();
+    seedSalesHistory();
 
     navigate('/home', { replace: true });
   }, [navigate]);

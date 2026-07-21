@@ -28,14 +28,14 @@ const PRIMARY_LABELS: Record<string, string> = {
   shopify: 'Shopify',
   wix: 'Wix',
   square: 'Square',
-  manual: 'In person',
+  manual: 'POS',
 };
 
 /** One sync channel per user — manual adds show Manual; synced items show the primary channel. */
 function ChannelLabel({ item }: { item: InventoryRow }) {
   const primary = readPrimaryChannel();
   const text =
-    item.channel === 'manual' ? 'In person' : PRIMARY_LABELS[primary] ?? null;
+    item.channel === 'manual' ? 'POS' : PRIMARY_LABELS[primary] ?? null;
   if (!text) return null;
 
   return (

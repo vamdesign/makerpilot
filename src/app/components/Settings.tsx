@@ -20,7 +20,9 @@ const STORE_CHANNEL_ORDER: Exclude<InventoryChannel, 'manual'>[] = [
   'square',
 ];
 
-function getChannelsSubtext(): string {
+const IN_PERSON_LABEL = 'In Person Sales (POS)';
+
+function getChannelLabels(): string[] {
   const items = readTrackedFromStorage() ?? INVENTORY_DEMO_SEED;
   const itemsCarryChannel = items.some((item) => item.channel != null);
 
@@ -43,9 +45,9 @@ function getChannelsSubtext(): string {
         labels.push(STORE_CHANNEL_LABELS[channel]);
       }
     }
-    if (hasInPerson) labels.push('In Person Sales');
+    if (hasInPerson) labels.push(IN_PERSON_LABEL);
 
-    return labels.length > 0 ? labels.join(', ') : 'None';
+    return labels.length > 0 ? labels : ['None'];
   }
 
   const labels: string[] = [];
@@ -57,19 +59,19 @@ function getChannelsSubtext(): string {
   try {
     const salesChannels = JSON.parse(localStorage.getItem('salesChannels') || '[]') as string[];
     if (salesChannels.includes('craft-shows')) {
-      labels.push('In Person Sales');
+      labels.push(IN_PERSON_LABEL);
     }
   } catch {
     /* ignore */
   }
 
-  return labels.length > 0 ? labels.join(', ') : 'None';
+  return labels.length > 0 ? labels : ['None'];
 }
 
 export default function Settings() {
   const navigate = useNavigate();
   const [pushNotifications, setPushNotifications] = useState(true);
-  const channelsSubtext = getChannelsSubtext();
+  const channelLabels = getChannelLabels();
 
   const handleLogout = () => {
     localStorage.clear();
@@ -105,7 +107,13 @@ export default function Settings() {
           <div className="p-4">
             <div className="text-left">
               <p className="text-sm">Channels:</p>
-              <p className="text-xs text-gray-500">{channelsSubtext}</p>
+              <div className="mt-0.5 flex flex-col gap-0.5">
+                {channelLabels.map((label) => (
+                  <p key={label} className="text-xs text-gray-500">
+                    {label}
+                  </p>
+                ))}
+              </div>
             </div>
           </div>
 
