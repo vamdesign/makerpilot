@@ -6,6 +6,7 @@ import { INVENTORY_DEMO_SEED } from '../data/inventoryDemo';
 import type { InventoryRow } from '../data/inventoryDemo';
 import { needsMaking, formatLeadLabel } from '../inventory/inventoryUtils';
 import TopSellersStrip from './home/TopSellersStrip';
+import SalesSnapshot from './home/SalesSnapshot';
 import { cardBorderTouchable } from './cardBorder';
 import {
   readActivityLog,
@@ -112,6 +113,9 @@ export default function Home() {
             </div>
           </>
         )}
+
+        {/* Section 1.5 — Sales snapshot (reads salesHistory data) */}
+        <SalesSnapshot />
 
         {/* Section 2 — Top Sellers */}
         {topSellers.length > 0 && (

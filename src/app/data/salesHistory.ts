@@ -21,12 +21,12 @@ const SALES_MODEL: {
   unitPrice: number;
   monthlyUnits: [number, number, number, number, number, number];
 }[] = [
-  { itemId: 2,  itemTitle: 'Tomato Ceramic Mug Tumbler Handmade', channel: 'etsy', unitPrice: 42,    monthlyUnits: [58, 62, 70, 66, 78, 84] },
-  { itemId: 4,  itemTitle: 'Strawberry Ceramic Mug',              channel: 'etsy', unitPrice: 42,    monthlyUnits: [30, 28, 34, 32, 36, 40] },
-  { itemId: 5,  itemTitle: 'Blueberry Ceramic Mug',               channel: 'etsy', unitPrice: 42,    monthlyUnits: [46, 40, 32, 24, 16, 10] },
-  { itemId: 10, itemTitle: '5.5 inch Ceramic Cat Slow Feeder',    channel: 'etsy', unitPrice: 39.89, monthlyUnits: [14, 16, 15, 18, 17, 19] },
-  { itemId: 20, itemTitle: 'Blue and Green Ceramic Bird Feeder',  channel: 'etsy', unitPrice: 36,    monthlyUnits: [8, 10, 9, 11, 10, 12] },
-  { itemId: 31, itemTitle: '4 Cup Spaniel Feeder Ocean Glaze',    channel: 'pos',  unitPrice: 50,    monthlyUnits: [22, 26, 24, 30, 28, 34] },
+  { itemId: 2,  itemTitle: 'Tomato Ceramic Mug Tumbler Handmade', channel: 'etsy', unitPrice: 42,    monthlyUnits: [39, 41, 47, 44, 52, 56] },
+  { itemId: 4,  itemTitle: 'Strawberry Ceramic Mug',              channel: 'etsy', unitPrice: 42,    monthlyUnits: [20, 19, 23, 21, 24, 27] },
+  { itemId: 5,  itemTitle: 'Blueberry Ceramic Mug',               channel: 'etsy', unitPrice: 42,    monthlyUnits: [31, 27, 21, 16, 11, 7] },
+  { itemId: 10, itemTitle: '5.5 inch Ceramic Cat Slow Feeder',    channel: 'etsy', unitPrice: 39.89, monthlyUnits: [9, 11, 10, 12, 11, 13] },
+  { itemId: 20, itemTitle: 'Blue and Green Ceramic Bird Feeder',  channel: 'etsy', unitPrice: 36,    monthlyUnits: [5, 7, 6, 7, 7, 8] },
+  { itemId: 31, itemTitle: '4 Cup Spaniel Feeder Ocean Glaze',    channel: 'pos',  unitPrice: 50,    monthlyUnits: [15, 17, 16, 20, 19, 23] },
 ];
 
 function seededRandom(seed: number): () => number {
