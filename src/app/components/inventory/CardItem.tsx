@@ -7,6 +7,14 @@ import LowStockClockIcon from '../icons/LowStockClockIcon';
 import { formatLeadLabel, needsMaking } from '../../inventory/inventoryUtils';
 import { cardBorderStatic } from '../cardBorder';
 
+/** In-person (manual / no channel) items use a purple outline; synced channels stay teal. */
+const CARD_BORDER_IN_PERSON = 'border-2 border-[#6C5CE0]';
+
+function cardBorderForChannel(item: InventoryRow): string {
+  const isInPerson = item.channel == null || item.channel === 'manual';
+  return isInPerson ? CARD_BORDER_IN_PERSON : cardBorderStatic;
+}
+
 const COPY_W = 80;
 const DELETE_W = 80;
 const ACTION_TRACK_W = COPY_W + DELETE_W;
@@ -20,14 +28,14 @@ const PRIMARY_LABELS: Record<string, string> = {
   shopify: 'Shopify',
   wix: 'Wix',
   square: 'Square',
-  manual: 'Manual',
+  manual: 'In person',
 };
 
 /** One sync channel per user — manual adds show Manual; synced items show the primary channel. */
 function ChannelLabel({ item }: { item: InventoryRow }) {
   const primary = readPrimaryChannel();
   const text =
-    item.channel === 'manual' ? 'Manual' : PRIMARY_LABELS[primary] ?? null;
+    item.channel === 'manual' ? 'In person' : PRIMARY_LABELS[primary] ?? null;
   if (!text) return null;
 
   return (
@@ -158,7 +166,7 @@ export default function CardItem({ item, onOpen, onDelete, onCopy, swipeRevision
         onPointerMove={onPointerMove}
         onPointerUp={onPointerEnd}
         onPointerCancel={onPointerEnd}
-        className={`relative z-[1] isolate flex select-none gap-3 bg-white p-3 touch-pan-y ${cardBorderStatic} ${
+        className={`relative z-[1] isolate flex select-none gap-3 bg-white p-3 touch-pan-y ${cardBorderForChannel(item)} ${
           offset === 0 ? 'rounded-2xl shadow-sm' : 'rounded-none rounded-l-2xl border-r-0 shadow-none'
         }`}
         style={{
