@@ -19,6 +19,7 @@ import AddItem from './components/AddItem';
 import DuplicateItem from './components/DuplicateItem';
 import RecordSale from './components/RecordSale';
 import Settings from './components/Settings';
+import DemoLoader from './components/DemoLoader';
 import BottomNav from './components/BottomNav';
 import { TRACKED_INVENTORY_KEY, writeTrackedToStorage } from './inventory/trackedInventory';
 import { INVENTORY_DEMO_SEED } from './data/inventoryDemo';
@@ -75,7 +76,7 @@ export default function App() {
       <div className="h-full">
         <Routes>
           <Route path="/" element={<Welcome />} />
-          <Route path="/demo" element={<Navigate to="/home" replace />} />
+          <Route path="/demo" element={<DemoLoader />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/business-type" element={<BusinessType />} />
