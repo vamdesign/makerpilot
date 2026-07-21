@@ -28,6 +28,7 @@ import imgCasseroleBakingDish from '../../assets/products/casserole-baking-dish.
 import imgLargeHandCarvedCeramic from '../../assets/products/large-hand-carved-ceramic.png';
 import img5cupBlueSpanielBowl from '../../assets/products/5cup-blue-spaniel-bowl.png';
 import imgRainbowSaltCellar from '../../assets/products/rainbow-salt-cellar.png';
+import imgSpanielBowlOceanGlaze from '../../assets/products/Spaniel_bowl.png';
 import { createProductThumbnail } from '../components/icons/ProductThumbnail';
 
 /** Single source for listing id → product thumbnail (matches ChooseListings / SetLimits). */
@@ -62,4 +63,5 @@ export const PRODUCT_THUMBNAIL_BY_ID = {
   28: createProductThumbnail(imgLargeHandCarvedCeramic),
   29: createProductThumbnail(img5cupBlueSpanielBowl),
   30: createProductThumbnail(imgRainbowSaltCellar),
+  31: createProductThumbnail(imgSpanielBowlOceanGlaze),
 };
