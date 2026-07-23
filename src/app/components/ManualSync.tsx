@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router';
+import { ChevronLeft } from 'lucide-react';
 import CornerPlaneMark from './CornerPlaneMark';
 import ScreenHeader from './ScreenHeader';
 import Base from '../../imports/Base/Base';
@@ -13,6 +14,15 @@ export default function ManualSync() {
 
   const handleSync = () => {
     writePrimaryChannel('manual');
+
+    const isPosOnly =
+      selectedChannels.length === 1 && selectedChannels[0] === 'craft-shows';
+
+    if (isPosOnly) {
+      navigate('/pos-sample-item');
+      return;
+    }
+
     const nextIndex = currentIndex + 1;
 
     // Check if there are more channels to sync
@@ -41,6 +51,14 @@ export default function ManualSync() {
       {/* Content */}
       <div className="relative z-10 flex flex-col">
         <CornerPlaneMark />
+
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute top-16 left-6 flex items-center gap-2 z-20"
+        >
+          <ChevronLeft size={20} className="text-gray-700" />
+          <span className="font-['DM_Sans:Regular',sans-serif] text-[14px] text-gray-700">Back</span>
+        </button>
 
         <ScreenHeader>
           <h1 className="text-center mb-3" style={{fontFamily: "'DM Serif Display', serif"}}>

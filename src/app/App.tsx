@@ -10,6 +10,7 @@ import BusinessType from './components/BusinessType';
 import EtsySync from './components/EtsySync';
 import OnlineShopSync from './components/OnlineShopSync';
 import ManualSync from './components/ManualSync';
+import PosSampleItem from './components/PosSampleItem';
 import ChooseListings from './components/ChooseListings';
 import SetLimits from './components/SetLimits';
 import Pricing from './components/Pricing';
@@ -83,6 +84,7 @@ export default function App() {
           <Route path="/sync-etsy" element={<EtsySync />} />
           <Route path="/sync-online-shop" element={<OnlineShopSync />} />
           <Route path="/sync-manual" element={<ManualSync />} />
+          <Route path="/pos-sample-item" element={<PosSampleItem />} />
           <Route path="/choose-listings" element={<ChooseListings />} />
           <Route path="/set-limits" element={<SetLimits />} />
           <Route path="/pricing" element={<Pricing />} />
