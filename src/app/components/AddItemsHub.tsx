@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router';
+import { ChevronLeft } from 'lucide-react';
 import PageTitle from './PageTitle';
 import {
   MAX_TRACKED_ITEMS,
@@ -51,6 +52,15 @@ export default function AddItemsHub() {
 
   return (
     <div className="relative isolate mx-auto flex h-full min-h-0 max-w-[393px] flex-col bg-white">
+      <button
+        type="button"
+        onClick={() => navigate(-1)}
+        className="absolute left-6 top-16 z-20 flex items-center gap-2"
+      >
+        <ChevronLeft size={20} className="text-gray-700" />
+        <span className="font-['DM_Sans:Regular',sans-serif] text-[14px] text-gray-700">Back</span>
+      </button>
+
       <PageTitle
         compact
         title="Add items"
@@ -83,10 +93,10 @@ export default function AddItemsHub() {
           className="w-full rounded-2xl border-2 border-[#E5E7EB] bg-white px-4 py-4 text-left transition-colors active:bg-gray-50"
         >
           <p className="font-['DM_Sans:SemiBold',sans-serif] text-[15px] text-gray-900">
-            Add manually
+            Add In Person Sales (POS)
           </p>
           <p className="mt-1 font-['DM_Sans:Regular',sans-serif] text-[13px] text-gray-500">
-            Enter item details yourself — craft shows, one-offs, and more.
+            Enter item details for craft fairs and markets.
           </p>
         </button>
       </div>

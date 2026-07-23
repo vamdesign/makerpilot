@@ -184,7 +184,8 @@ export default function ChooseListings() {
 
   const sortedListings = getSortedListings();
   const isMaxReached = selectedItems.size >= maxSelectable;
-  const canContinue = selectedItems.size > 0;
+  // Demo: Continue is always clickable regardless of how many listings are selected.
+  const canContinue = true;
 
   return (
     <div className="relative mx-auto flex h-full min-h-0 max-w-[430px] flex-col">
@@ -197,7 +198,7 @@ export default function ChooseListings() {
         {/* Back button - top left */}
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-6 left-6 flex items-center gap-2 z-20"
+          className="absolute top-16 left-6 flex items-center gap-2 z-20"
         >
           <ChevronLeft size={20} className="text-gray-700" />
           <span className="font-['DM_Sans:Regular',sans-serif] text-[14px] text-gray-700">Back</span>
@@ -360,6 +361,11 @@ export default function ChooseListings() {
           {/* Continue button */}
           <button
             onClick={() => {
+              // No additional listings picked → skip Restock reminders, go straight to inventory.
+              if (selectedItems.size === 0) {
+                navigate('/inventory');
+                return;
+              }
               // Preserve selection order (don't include thumbnail components - they can't be cloned)
               const selectedListings = selectionOrder
                 .map(id => listings.find(item => item.id === id))

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Camera } from 'lucide-react';
 import { toast } from 'sonner';
 import type { InventoryRow, LeadTimeUnit } from '../../data/inventoryDemo';
 import { Drawer, DrawerContent, DrawerTitle } from '../ui/drawer';
@@ -168,16 +167,6 @@ export default function EditItemModal({
                   <div className="mb-5 flex items-start gap-3">
                     <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-gray-100 [&_svg]:size-full">
                       <Thumbnail />
-                      {!isSynced && (
-                        <button
-                          type="button"
-                          aria-label="Change photo"
-                          onClick={() => toast.message('Photo upload coming soon')}
-                          className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/30"
-                        >
-                          <Camera size={14} className="text-white" strokeWidth={2} />
-                        </button>
-                      )}
                     </div>
                     <div className="min-w-0 flex-1">
                       {!isSynced ? (

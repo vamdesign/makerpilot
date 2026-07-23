@@ -17,7 +17,7 @@ export default function Pricing() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="absolute top-6 left-6 z-20 flex items-center gap-2"
+          className="absolute top-16 left-6 z-20 flex items-center gap-2"
         >
           <ChevronLeft size={20} className="text-gray-700" />
           <span className="font-['DM_Sans:Regular',sans-serif] text-[14px] text-gray-700">Back</span>

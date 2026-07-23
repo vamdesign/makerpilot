@@ -7,6 +7,7 @@ import Base from '../../imports/Base-2/Base-36-390';
 import Pp04A from '../../imports/Pp04A/Pp04A';
 import Pp02A from '../../imports/Pp02A/Pp02A';
 import Pp01A from '../../imports/Pp01A/Pp01A';
+import { writePrimaryChannel } from '../inventory/trackedInventory';
 
 export default function BusinessType() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function BusinessType() {
   const channels = [
     { id: 'etsy', title: 'Etsy shop', description: 'Sync your listings automatically', icon: Pp04A },
     { id: 'own-shop', title: 'My own online shop', description: 'Sync from your Shopify, Wix, or Square store', icon: Pp02A },
-    { id: 'craft-shows', title: 'Craft shows & markets', description: 'Capture sales on the go', icon: Pp01A },
+    { id: 'craft-shows', title: 'In Person Sales (POS)', description: 'Capture sales at craft fairs or markets', icon: Pp01A },
   ];
 
   const toggleChannel = (id: string) => {
@@ -27,6 +28,15 @@ export default function BusinessType() {
   const handleContinue = () => {
     if (selectedChannels.length > 0) {
       localStorage.setItem('salesChannels', JSON.stringify(selectedChannels));
+
+      // POS-only → sample Spaniel item screen (skip intermediate sync page)
+      const isPosOnly =
+        selectedChannels.length === 1 && selectedChannels[0] === 'craft-shows';
+      if (isPosOnly) {
+        writePrimaryChannel('manual');
+        navigate('/pos-sample-item');
+        return;
+      }
 
       // Navigate to first selected sync screen
       // Order: etsy → own-shop → craft-shows
@@ -71,7 +81,7 @@ export default function BusinessType() {
             Where do you sell?
           </h1>
 
-          <p className="text-center text-gray-600 mb-8">
+          <p className="text-center text-gray-500 mb-8">
             We'll track your inventory across every channel you choose.
           </p>
         </ScreenHeader>

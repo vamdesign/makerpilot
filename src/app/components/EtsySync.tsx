@@ -28,7 +28,7 @@ export default function EtsySync() {
 
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-6 left-6 flex items-center gap-2 z-20"
+          className="absolute top-16 left-6 flex items-center gap-2 z-20"
         >
           <ChevronLeft size={20} className="text-gray-700" />
           <span className="font-['DM_Sans:Regular',sans-serif] text-[14px] text-gray-700">Back</span>

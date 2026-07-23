@@ -150,7 +150,7 @@ export default function DuplicateItem() {
           onClick={() =>
             navigate('/inventory', { state: { reopenEditItemId: seed.editItemId } })
           }
-          className="absolute left-6 top-6 z-20 flex items-center gap-2"
+          className="absolute left-6 top-16 z-20 flex items-center gap-2"
         >
           <ChevronLeft size={20} className="text-gray-700" />
           <span className="font-['DM_Sans:Regular',sans-serif] text-[14px] text-gray-700">

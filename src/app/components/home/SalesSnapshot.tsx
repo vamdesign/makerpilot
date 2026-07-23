@@ -20,12 +20,13 @@ function formatUsdInt(n: number): string {
 }
 
 export default function SalesSnapshot() {
-  const records = useMemo(() => readSalesHistory(), []);
-  const last30 = useMemo(() => salesInRange(30, records), [records]);
-  const mom = useMemo(() => momChange(records), [records]);
-  const months = useMemo(() => salesByMonth(6, records), [records]);
-  const channels = useMemo(() => salesByChannel(30, records), [records]);
   const [trendOpen, setTrendOpen] = useState(false);
+  const [range, setRange] = useState<30 | 180 | 365>(30);
+  const records = useMemo(() => readSalesHistory(), []);
+  const last30 = useMemo(() => salesInRange(range, records), [records, range]);
+  const mom = useMemo(() => momChange(records), [records]);
+  const months = useMemo(() => salesByMonth(range === 365 ? 12 : 6, records), [records, range]);
+  const channels = useMemo(() => salesByChannel(range, records), [records, range]);
 
   if (records.length === 0) return null;
 
@@ -44,7 +45,7 @@ export default function SalesSnapshot() {
       <div className={`rounded-2xl bg-white px-4 py-4 ${cardBorderTouchable}`}>
         {/* Hero */}
         <p className="font-['DM_Sans:Regular',sans-serif] text-[12px] text-gray-400">
-          Sales last 30 days
+          {range === 30 ? 'Sales last 30 days' : range === 180 ? 'Sales last 6 months' : 'Sales last 12 months'}
         </p>
         <div className="mt-1 flex items-baseline gap-2">
           <span className="font-['DM_Serif_Display',serif] text-[32px] text-gray-900" style={serif}>
@@ -85,26 +86,42 @@ export default function SalesSnapshot() {
         {/* Accordion body: 6-month bars */}
         {trendOpen && (
           <div className="mt-3">
-            <div className="flex h-24 items-end justify-between gap-2">
+            <div className="mb-3 flex gap-2">
+              {([[30, '30 days'], [180, '6 months'], [365, 'Year']] as const).map(([val, label]) => (
+                <button
+                  key={val}
+                  type="button"
+                  onClick={() => setRange(val)}
+                  className={`rounded-full px-3 py-1 font-['DM_Sans:SemiBold',sans-serif] text-[11px] ${
+                    range === val ? 'bg-[#1A9E8F] text-white' : 'bg-gray-100 text-gray-500'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <div className="flex h-24 items-end justify-between gap-1.5">
               {months.map((m, idx) => {
-                const heightPct = Math.max(6, Math.round((m.gross / maxMonth) * 100));
+                const heightPct = m.gross > 0 ? Math.max(6, Math.round((m.gross / maxMonth) * 100)) : 4;
                 const isLast = idx === months.length - 1;
                 return (
                   <div key={`${m.label}-${idx}`} className="flex flex-1 flex-col items-center gap-1">
                     <div className="flex h-20 w-full items-end justify-center">
                       <div
-                        className={`flex w-full max-w-[26px] items-start justify-center rounded-t-md ${
+                        className={`flex w-full max-w-[40px] items-start justify-center rounded-t-md ${
                           isLast ? 'bg-[#1A9E8F]' : 'bg-[#B9E3DD]'
                         }`}
                         style={{ height: `${heightPct}%` }}
                       >
-                        <span
-                          className={`mt-0.5 font-['DM_Sans:SemiBold',sans-serif] text-[8px] ${
-                            isLast ? 'text-white' : 'text-[#0F6E56]'
-                          }`}
-                        >
-                          {formatUsdInt(m.gross)}
-                        </span>
+                        {m.gross > 0 && (
+                          <span
+                            className={`mt-0.5 font-['DM_Sans:SemiBold',sans-serif] text-[8px] ${
+                              isLast ? 'text-white' : 'text-[#0F6E56]'
+                            }`}
+                          >
+                            {formatUsdInt(m.gross)}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <span className="font-['DM_Sans:Regular',sans-serif] text-[10px] text-gray-400">
