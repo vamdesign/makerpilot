@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router';
-import { ChevronLeft } from 'lucide-react';
 import PageTitle from './PageTitle';
 import {
   MAX_TRACKED_ITEMS,
@@ -52,15 +51,6 @@ export default function AddItemsHub() {
 
   return (
     <div className="relative isolate mx-auto flex h-full min-h-0 max-w-[393px] flex-col bg-white">
-      <button
-        type="button"
-        onClick={() => navigate(-1)}
-        className="absolute left-6 top-16 z-20 flex items-center gap-2"
-      >
-        <ChevronLeft size={20} className="text-gray-700" />
-        <span className="font-['DM_Sans:Regular',sans-serif] text-[14px] text-gray-700">Back</span>
-      </button>
-
       <PageTitle
         compact
         title="Add items"

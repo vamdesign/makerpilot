@@ -7,8 +7,6 @@ import Base from '../../imports/Base-2/Base-36-390';
 import Pp04A from '../../imports/Pp04A/Pp04A';
 import Pp02A from '../../imports/Pp02A/Pp02A';
 import Pp01A from '../../imports/Pp01A/Pp01A';
-import { writePrimaryChannel } from '../inventory/trackedInventory';
-
 export default function BusinessType() {
   const navigate = useNavigate();
   const [selectedChannels, setSelectedChannels] = useState<string[]>([]);
@@ -29,11 +27,10 @@ export default function BusinessType() {
     if (selectedChannels.length > 0) {
       localStorage.setItem('salesChannels', JSON.stringify(selectedChannels));
 
-      // POS-only → sample Spaniel item screen (skip intermediate sync page)
+      // POS-only → sample item screen (Save loads full base inventory)
       const isPosOnly =
         selectedChannels.length === 1 && selectedChannels[0] === 'craft-shows';
       if (isPosOnly) {
-        writePrimaryChannel('manual');
         navigate('/pos-sample-item');
         return;
       }

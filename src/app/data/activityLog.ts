@@ -19,7 +19,20 @@ export interface ActivityEvent {
 const ACTIVITY_LOG_KEY = 'makerpilotActivityLog';
 const MAX_LOG_ENTRIES = 50; // keep last 50 events in storage
 
+/**
+ * Demo feed aligned with INVENTORY_DEMO_SEED:
+ * Tomato (id 2) stock 3, alert 5 · Strawberry (id 4) stock 7
+ * Large Hand-Carved appears only as Deleted (not in current inventory).
+ */
 const ACTIVITY_DEMO_SEED: ActivityEvent[] = [
+  {
+    id: 'demo-6',
+    type: 'item_deleted',
+    itemId: 28,
+    itemTitle: 'Large Hand-Carved Ceramic Bowl',
+    detail: 'Removed from inventory',
+    timestamp: Date.now() - 1 * 60 * 60 * 1000,
+  },
   {
     id: 'demo-1',
     type: 'sale',
@@ -31,25 +44,25 @@ const ACTIVITY_DEMO_SEED: ActivityEvent[] = [
   {
     id: 'demo-2',
     type: 'restock',
-    itemId: 6,
-    itemTitle: 'Citrus Ceramic Mug Tumbler Handmade',
-    detail: 'Stock 8 → 12',
+    itemId: 2,
+    itemTitle: 'Tomato Ceramic Mug Tumbler Handmade',
+    detail: 'Stock 2 → 5',
     timestamp: Date.now() - 5 * 60 * 60 * 1000,
   },
   {
     id: 'demo-3',
-    type: 'sale',
-    itemId: 6,
-    itemTitle: 'Citrus Ceramic Mug Tumbler Handmade',
-    detail: 'Stock 10 → 8',
+    type: 'restock',
+    itemId: 2,
+    itemTitle: 'Tomato Ceramic Mug Tumbler Handmade',
+    detail: 'Stock 1 → 2',
     timestamp: Date.now() - 26 * 60 * 60 * 1000,
   },
   {
     id: 'demo-4',
-    type: 'lead_time_changed',
-    itemId: 28,
-    itemTitle: 'Large Hand-Carved Ceramic Bowl',
-    detail: 'Lead time 2 → 3 wks',
+    type: 'restock',
+    itemId: 4,
+    itemTitle: 'Strawberry Ceramic Mug',
+    detail: 'Stock 5 → 7',
     timestamp: Date.now() - 48 * 60 * 60 * 1000,
   },
   {
@@ -59,14 +72,6 @@ const ACTIVITY_DEMO_SEED: ActivityEvent[] = [
     itemTitle: 'Tomato Ceramic Mug Tumbler Handmade',
     detail: 'Alert at 3 → 5',
     timestamp: Date.now() - 72 * 60 * 60 * 1000,
-  },
-  {
-    id: 'demo-6',
-    type: 'item_added',
-    itemId: 28,
-    itemTitle: 'Large Hand-Carved Ceramic Bowl',
-    detail: 'Added to inventory',
-    timestamp: Date.now() - 96 * 60 * 60 * 1000,
   },
 ];
 

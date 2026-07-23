@@ -2,8 +2,7 @@ import { useNavigate } from 'react-router';
 import PageTitle from './PageTitle';
 import { cardBorderTouchable } from './cardBorder';
 import { PRODUCT_THUMBNAIL_BY_ID } from '../data/productThumbnailMap';
-import { appendManualTrackedItem } from '../inventory/trackedInventory';
-import { appendActivityEvent } from '../data/activityLog';
+import { seedBaseInventoryExperience } from '../inventory/seedBaseInventory';
 
 const SAMPLE = {
   title: '4 Cup Spaniel Feeder Ocean Glaze',
@@ -28,25 +27,8 @@ export default function PosSampleItem() {
   const Thumbnail = PRODUCT_THUMBNAIL_BY_ID[31];
 
   const handleSave = () => {
-    const saved = appendManualTrackedItem({
-      title: SAMPLE.title,
-      stock: SAMPLE.stock,
-      alertThreshold: SAMPLE.alertThreshold,
-      leadTime: SAMPLE.leadTime,
-      leadTimeUnit: SAMPLE.leadTimeUnit,
-      price: SAMPLE.price,
-    });
-
-    if (saved) {
-      appendActivityEvent({
-        type: 'item_added',
-        itemId: saved.id,
-        itemTitle: saved.title,
-        detail: `Stock ${SAMPLE.stock}`,
-        timestamp: Date.now(),
-      });
-    }
-
+    // Same base roster as Etsy / demo — one Spaniel POS row, no duplicate append
+    seedBaseInventoryExperience();
     navigate('/inventory');
   };
 
