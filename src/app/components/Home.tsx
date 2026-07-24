@@ -6,14 +6,15 @@ import { INVENTORY_DEMO_SEED, type InventoryRow } from '../data/inventoryDemo';
 import { needsMaking, formatLeadLabel } from '../inventory/inventoryUtils';
 import { upcomingHolidays } from '../data/holidays';
 import SalesSnapshot from './home/SalesSnapshot';
-import { salesForItem } from '../data/salesHistory';
+import { salesForItem, monthlyUnitsForItem } from '../data/salesHistory';
 import { cardBorderTouchable } from './cardBorder';
 import EditItemModal from './inventory/EditItemModal';
 import {
   readActivityLog,
   relativeTime,
-  eventLabel,
+  formatActivitySummary,
   appendActivityEvent,
+  seedActivityLogIfEmpty,
 } from '../data/activityLog';
 
 const serif = { fontFamily: "'DM Serif Display', Georgia, serif" } as const;
@@ -24,30 +25,33 @@ const INSIGHTS: Record<number, { trend: string; guidance: string; cooling?: bool
     guidance: 'Recent batches ran 3 wks, not 2. Consider making more and updating lead times.',
   },
   5: {
-    trend: 'Cooling off. Sold 3 last week, down from 8. You have 3 in stock.',
-    guidance: 'Enough stock for now. No need to make more right now.',
+    trend: 'Cooling off. Sold 7 last month, down from 31 six months ago.',
+    guidance: 'Your 2 week lead time gives you room. Make when you are ready.',
     cooling: true,
   },
 };
 
-function Sparkline({ cooling }: { cooling?: boolean }) {
-  const up = 'M2 16 L10 12 L18 13 L26 5';
-  const down = 'M2 5 L10 8 L18 7 L26 15';
+function Sparkline({ values }: { values: number[] }) {
+  if (values.length < 2) return <span className="inline-block w-[38px]" aria-hidden />;
+  const max = Math.max(...values);
+  const min = Math.min(...values);
+  const span = max - min || 1;
+  const w = 220;
+  const h = 28;
+  const step = w / (values.length - 1);
+  const points = values.map((v, i) => {
+    const x = i * step;
+    const y = h - ((v - min) / span) * h;
+    return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)} ${y.toFixed(1)}`;
+  });
+  const rising = values[values.length - 1] >= values[0];
+  const color = rising ? '#FF6600' : '#9CA3AF';
+  const lastX = w;
+  const lastY = h - ((values[values.length - 1] - min) / span) * h;
   return (
-    <svg width="30" height="20" viewBox="0 0 30 20" fill="none" aria-hidden>
-      <path
-        d={cooling ? down : up}
-        stroke={cooling ? '#9CA3AF' : '#FF6600'}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {!cooling && (
-        <path d="M20 5 L26 5 L26 11" stroke="#FF6600" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      )}
-      {cooling && (
-        <path d="M20 15 L26 15 L26 9" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      )}
+    <svg width={w} height={h + 4} viewBox={`0 0 ${w} ${h + 4}`} fill="none" aria-hidden className="shrink-0">
+      <path d={points.join(' ')} stroke={color} strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" transform="translate(0 2)" />
+      <circle cx={lastX} cy={lastY + 2} r="2" fill={color} />
     </svg>
   );
 }
@@ -106,11 +110,37 @@ export default function Home() {
     () => [...items].filter(needsMaking).sort((a, b) => a.stock - b.stock),
     [items],
   );
-  const topSellers = useMemo(() => items.filter((i) => i.isTopSeller), [items]);
+  const movers = useMemo(() => {
+    const scored = items
+      .map((item) => {
+        const series = monthlyUnitsForItem(item.id, 6);
+        const first = series[0];
+        const last = series[series.length - 1];
+        const total = series.reduce((s, n) => s + n, 0);
+        const pct = first > 0 ? Math.round(((last - first) / first) * 100) : 0;
+        return { item, series, pct, total };
+      })
+      .filter((m) => m.total > 0);
+
+    const risers = scored
+      .filter((m) => m.pct > 0)
+      .sort((a, b) => b.pct - a.pct)
+      .slice(0, 2);
+
+    const fallers = scored
+      .filter((m) => m.pct < 0)
+      .sort((a, b) => a.pct - b.pct)
+      .slice(0, 1);
+
+    return { risers, fallers, all: [...risers, ...fallers] };
+  }, [items]);
 
   const [openId, setOpenId] = useState<number | null>(null);
   const [activityExpanded, setActivityExpanded] = useState(false);
-  const allActivity = useMemo(() => readActivityLog(), [items]);
+  const allActivity = useMemo(() => {
+    seedActivityLogIfEmpty();
+    return readActivityLog();
+  }, [items]);
   const visibleActivity = useMemo(
     () => (activityExpanded ? allActivity : allActivity.slice(0, 5)),
     [allActivity, activityExpanded],
@@ -119,13 +149,13 @@ export default function Home() {
 
   return (
     <div className="relative isolate mx-auto flex h-full min-h-0 max-w-[393px] flex-col bg-white">
-      <PageTitle title="Home" compact={true} />
+      <PageTitle title="Studio" compact extendedFade />
 
-      <div className="relative z-10 min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-24 pt-12">
+      <div className="relative z-10 min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-24">
 
-        {/* Top toolbar — holiday countdown (same placement/style as Inventory's Add button) */}
-        {holidays.length > 0 && (
-          <div className="relative z-30 mb-2 flex items-center justify-end">
+        {/* Toolbar row — same vertical slot as Inventory Sync / Add */}
+        {holidays.length > 0 ? (
+          <div className="relative z-30 mb-2 flex items-center justify-end pt-3">
             <button
               type="button"
               onClick={() => setHolidayOpen((o) => !o)}
@@ -164,6 +194,8 @@ export default function Home() {
               </div>
             )}
           </div>
+        ) : (
+          <div className="pt-3" aria-hidden />
         )}
 
         {/* Needs making */}
@@ -204,7 +236,6 @@ export default function Home() {
                           <span className="text-[#FF6600]">Stock {item.stock}</span>
                         </p>
                       </div>
-                      <Sparkline cooling={insight?.cooling} />
                       <svg
                         width="16" height="16" viewBox="0 0 24 24" fill="none"
                         stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
@@ -215,7 +246,7 @@ export default function Home() {
                     </button>
                     {isOpen && (
                       <div className="border-t border-[#E5E7EB] px-4 py-3">
-                        {insight && (
+                        {insight ? (
                           <>
                             <p className="font-['DM_Sans:Regular',sans-serif] text-[12px] leading-relaxed text-gray-600">
                               {insight.trend}
@@ -224,14 +255,22 @@ export default function Home() {
                               {insight.guidance}
                             </p>
                           </>
+                        ) : (
+                          <p className="font-['DM_Sans:Regular',sans-serif] text-[12px] leading-relaxed text-gray-600">
+                            Stock {item.stock}, alert set at {item.alertThreshold}. Your{' '}
+                            {formatLeadLabel(item.leadTime, item.leadTimeUnit).replace('Lead: ', '')} lead time
+                            gives you room. Make when you are ready.
+                          </p>
                         )}
-                        <button
-                          type="button"
-                          onClick={() => openEdit(item)}
-                          className="mt-3 w-full rounded-xl bg-[#1A9E8F] py-3 font-['DM_Sans:SemiBold',sans-serif] text-[14px] text-white active:bg-[#157d71]"
-                        >
-                          Update inventory
-                        </button>
+                        {!insight?.cooling && (
+                          <button
+                            type="button"
+                            onClick={() => openEdit(item)}
+                            className="mt-3 w-full rounded-xl bg-[#1A9E8F] py-3 font-['DM_Sans:SemiBold',sans-serif] text-[14px] text-white active:bg-[#157d71]"
+                          >
+                            Update inventory
+                          </button>
+                        )}
                       </div>
                     )}
                   </div>
@@ -244,41 +283,51 @@ export default function Home() {
         {/* Sales */}
         <SalesSnapshot />
 
-        {/* Top sellers — glance-only rows */}
-        {topSellers.length > 0 && (
+        {/* 6 month sales trends */}
+        {movers.all.length > 0 && (
           <>
             <h2 className="mb-3 mt-6 font-['DM_Serif_Display',serif] text-[20px] text-gray-900" style={serif}>
-              Trending
+              6 month sales trends
             </h2>
             <div className={`mb-8 overflow-hidden rounded-2xl bg-white ${cardBorderTouchable}`}>
-              {topSellers.map((item, idx) => {
+              {movers.all.map(({ item, series, pct }, idx) => {
                 const Thumbnail = item.Thumbnail;
                 const sold30 = salesForItem(item.id, 30);
-                const insight = INSIGHTS[item.id];
-                const cooling = insight?.cooling;
+                const rising = pct >= 0;
                 return (
                   <div
                     key={item.id}
-                    className={`flex items-center gap-3 bg-white px-4 py-3 ${
-                      idx < topSellers.length - 1 ? 'border-b border-[#E5E7EB]' : ''
+                    className={`bg-white px-4 py-3 ${
+                      idx < movers.all.length - 1 ? 'border-b border-[#E5E7EB]' : ''
+                    } ${
+                      idx === movers.risers.length && movers.fallers.length > 0
+                        ? 'border-t-4 border-t-[#F3F4F6]'
+                        : ''
                     }`}
                   >
-                    <div className="h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-gray-100 [&_svg]:size-full [&_img]:size-full [&_img]:object-cover">
-                      <Thumbnail />
+                    <div className="flex items-center gap-3">
+                      <div className="h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-gray-100 [&_svg]:size-full [&_img]:size-full [&_img]:object-cover">
+                        <Thumbnail />
+                      </div>
+                      <p className="min-w-0 flex-1 truncate font-['DM_Sans:Regular',sans-serif] text-[13px] text-[#373737]">
+                        {item.title}
+                      </p>
+                      <div className="shrink-0 text-right">
+                        <p className="font-['DM_Sans:SemiBold',sans-serif] text-[14px] text-[#373737]">
+                          {sold30} sold
+                        </p>
+                        <p
+                          className={`font-['DM_Sans:Regular',sans-serif] text-[11px] ${
+                            rising ? 'text-[#FF6600]' : 'text-gray-400'
+                          }`}
+                        >
+                          {rising ? '↑' : '↓'} {Math.abs(pct)}%
+                        </p>
+                      </div>
                     </div>
-                    <p className="min-w-0 flex-1 truncate font-['DM_Sans:Regular',sans-serif] text-[13px] text-[#373737]">
-                      {item.title}
-                    </p>
-                    <span
-                      className={`font-['DM_Sans:Regular',sans-serif] text-[11px] ${
-                        cooling ? 'text-gray-400' : 'text-[#FF6600]'
-                      }`}
-                    >
-                      {cooling ? '↘ cooling' : '↗ up'}
-                    </span>
-                    <span className="w-7 text-right font-['DM_Sans:SemiBold',sans-serif] text-[14px] text-[#373737]">
-                      {sold30}
-                    </span>
+                    <div className="mt-2">
+                      <Sparkline values={series} />
+                    </div>
                   </div>
                 );
               })}
@@ -305,7 +354,7 @@ export default function Home() {
                       {event.itemTitle}
                     </p>
                     <p className="font-['DM_Sans:Regular',sans-serif] text-[12px] text-gray-500">
-                      {eventLabel(event.type)} · {event.detail}
+                      {formatActivitySummary(event)}
                     </p>
                   </div>
                   <p className="shrink-0 font-['DM_Sans:Regular',sans-serif] text-[11px] text-gray-400">

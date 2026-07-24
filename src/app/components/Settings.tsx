@@ -349,7 +349,7 @@ export default function Settings() {
     <div className="relative isolate mx-auto flex h-full min-h-0 max-w-[430px] flex-col bg-white">
       <PageTitle title="Account" compact />
 
-      <div className="relative z-10 flex-1 overflow-y-auto px-6 pt-2 pb-28">
+      <div className="relative z-10 flex-1 overflow-y-auto px-6 pt-3 pb-28">
         <div className="mb-8 overflow-hidden rounded-xl border border-gray-200 bg-white divide-y">
           <CollapsibleRow
             title="Account Settings"

@@ -5,6 +5,7 @@ import {
   salesInRange,
   momChange,
   salesByMonth,
+  salesByWeek,
   salesByChannel,
 } from '../../data/salesHistory';
 
@@ -25,12 +26,18 @@ export default function SalesSnapshot() {
   const records = useMemo(() => readSalesHistory(), []);
   const last30 = useMemo(() => salesInRange(range, records), [records, range]);
   const mom = useMemo(() => momChange(records), [records]);
-  const months = useMemo(() => salesByMonth(range === 365 ? 12 : 6, records), [records, range]);
+  const buckets = useMemo(
+    () =>
+      range === 30
+        ? salesByWeek(4, records)
+        : salesByMonth(range === 365 ? 12 : 6, records),
+    [records, range],
+  );
   const channels = useMemo(() => salesByChannel(range, records), [records, range]);
 
   if (records.length === 0) return null;
 
-  const maxMonth = Math.max(1, ...months.map((m) => m.gross));
+  const maxMonth = Math.max(1, ...buckets.map((m) => m.gross));
   const channelTotal = Math.max(1, channels.etsy.gross + channels.pos.gross);
   const etsyPct = Math.round((channels.etsy.gross / channelTotal) * 100);
   const posPct = 100 - etsyPct;
@@ -66,7 +73,7 @@ export default function SalesSnapshot() {
           onClick={() => setTrendOpen((o) => !o)}
           className="mt-3 flex items-center gap-1 font-['DM_Sans:Regular',sans-serif] text-[12px] text-gray-500"
         >
-          {trendOpen ? 'Hide trend' : 'View trend'}
+          {trendOpen ? 'Hide timeline' : 'Show timeline'}
           <svg
             width="15"
             height="15"
@@ -101,9 +108,9 @@ export default function SalesSnapshot() {
               ))}
             </div>
             <div className="flex h-24 items-end justify-between gap-1.5">
-              {months.map((m, idx) => {
+              {buckets.map((m, idx) => {
                 const heightPct = m.gross > 0 ? Math.max(6, Math.round((m.gross / maxMonth) * 100)) : 4;
-                const isLast = idx === months.length - 1;
+                const isLast = idx === buckets.length - 1;
                 return (
                   <div key={`${m.label}-${idx}`} className="flex flex-1 flex-col items-center gap-1">
                     <div className="flex h-20 w-full items-end justify-center">
@@ -113,7 +120,7 @@ export default function SalesSnapshot() {
                         }`}
                         style={{ height: `${heightPct}%` }}
                       >
-                        {m.gross > 0 && (
+                        {m.gross > 0 && range !== 365 && (
                           <span
                             className={`mt-0.5 font-['DM_Sans:SemiBold',sans-serif] text-[8px] ${
                               isLast ? 'text-white' : 'text-[#0F6E56]'

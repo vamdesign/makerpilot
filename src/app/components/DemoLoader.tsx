@@ -1,17 +1,18 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import { enableDemoMode } from '../demo/demoMode';
 import { seedBaseInventoryExperience } from '../inventory/seedBaseInventory';
 
 /**
- * /demo — force-loads a clean, fully populated demo state, then redirects to Home.
- * Always resets so the demo is pristine on every visit (portfolio / hiring-manager view).
+ * /demo — seeds portfolio demo state, then opens the Welcome (sign-on) screen.
  */
 export default function DemoLoader() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    enableDemoMode();
     seedBaseInventoryExperience();
-    navigate('/home', { replace: true });
+    navigate('/', { replace: true });
   }, [navigate]);
 
   return null;

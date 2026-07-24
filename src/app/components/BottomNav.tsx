@@ -1,19 +1,19 @@
 import { useNavigate, useLocation } from 'react-router';
-import { Home, Package, User } from 'lucide-react';
+import { Compass, Package, User } from 'lucide-react';
 
 export default function BottomNav() {
   const navigate = useNavigate();
   const location = useLocation();
 
   const navItems = [
-    { path: '/home', icon: Home, label: 'Home' },
+    { path: '/home', icon: Compass, label: 'Studio' },
     { path: '/inventory', icon: Package, label: 'Inventory' },
     { path: '/account', icon: User, label: 'Account' },
   ];
 
   return (
     <nav className="absolute bottom-0 inset-x-0 z-40 border-t border-gray-200 bg-white">
-      <div className="flex items-end justify-around px-1 pb-2 pt-1">
+      <div className="flex items-end justify-around px-1 pb-8 pt-2">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =

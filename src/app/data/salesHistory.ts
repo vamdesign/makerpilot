@@ -21,12 +21,14 @@ const SALES_MODEL: {
   unitPrice: number;
   monthlyUnits: [number, number, number, number, number, number];
 }[] = [
-  { itemId: 2,  itemTitle: 'Tomato Ceramic Mug Tumbler Handmade', channel: 'etsy', unitPrice: 42,    monthlyUnits: [39, 41, 47, 44, 52, 56] },
-  { itemId: 4,  itemTitle: 'Strawberry Ceramic Mug',              channel: 'etsy', unitPrice: 42,    monthlyUnits: [20, 19, 23, 21, 24, 27] },
+  // Risers for Studio “6 month sales trends” (top by %): Tomato, Strawberry.
+  // Faller: Blueberry. Other SKUs stay flatter so they don’t outrank the mugs.
+  { itemId: 2,  itemTitle: 'Tomato Ceramic Mug Tumbler Handmade', channel: 'etsy', unitPrice: 42,    monthlyUnits: [28, 32, 38, 44, 50, 58] },
+  { itemId: 4,  itemTitle: 'Strawberry Ceramic Mug',              channel: 'etsy', unitPrice: 42,    monthlyUnits: [14, 16, 18, 20, 24, 28] },
   { itemId: 5,  itemTitle: 'Blueberry Ceramic Mug',               channel: 'etsy', unitPrice: 42,    monthlyUnits: [31, 27, 21, 16, 11, 7] },
-  { itemId: 10, itemTitle: '5.5 inch Ceramic Cat Slow Feeder',    channel: 'etsy', unitPrice: 39.89, monthlyUnits: [9, 11, 10, 12, 11, 13] },
-  { itemId: 20, itemTitle: 'Blue and Green Ceramic Bird Feeder',  channel: 'etsy', unitPrice: 36,    monthlyUnits: [5, 7, 6, 7, 7, 8] },
-  { itemId: 31, itemTitle: '4 Cup Spaniel Feeder Ocean Glaze',    channel: 'pos',  unitPrice: 50,    monthlyUnits: [15, 17, 16, 20, 19, 23] },
+  { itemId: 10, itemTitle: '5.5 inch Ceramic Cat Slow Feeder',    channel: 'etsy', unitPrice: 39.89, monthlyUnits: [10, 10, 11, 11, 12, 12] },
+  { itemId: 20, itemTitle: 'Blue and Green Ceramic Bird Feeder',  channel: 'etsy', unitPrice: 36,    monthlyUnits: [6, 6, 7, 7, 7, 8] },
+  { itemId: 31, itemTitle: '4 Cup Spaniel Feeder Ocean Glaze',    channel: 'pos',  unitPrice: 50,    monthlyUnits: [18, 18, 19, 19, 20, 21] },
 ];
 
 function seededRandom(seed: number): () => number {
@@ -144,4 +146,37 @@ export function salesByMonth(months: number, records = readSalesHistory(), now =
 export function salesForItem(itemId: number, days: number, records = readSalesHistory(), now = Date.now()): number {
   const cutoff = now - days * DAY_MS;
   return unitsOf(records.filter((r) => r.itemId === itemId && r.timestamp >= cutoff));
+}
+
+export interface WeekBucket {
+  label: string;
+  gross: number;
+}
+
+export function salesByWeek(weeks: number, records = readSalesHistory(), now = Date.now()): WeekBucket[] {
+  const WEEK_MS = 7 * DAY_MS;
+  const out: WeekBucket[] = [];
+  for (let w = weeks - 1; w >= 0; w--) {
+    const end = now - w * WEEK_MS;
+    const start = end - WEEK_MS;
+    const seg = records.filter((r) => r.timestamp < end && r.timestamp >= start);
+    out.push({ label: `W${weeks - w}`, gross: grossOf(seg) });
+  }
+  return out;
+}
+
+export function monthlyUnitsForItem(
+  itemId: number,
+  months: number,
+  records = readSalesHistory(),
+  now = Date.now(),
+): number[] {
+  const out: number[] = [];
+  for (let m = months - 1; m >= 0; m--) {
+    const end = now - m * MONTH_MS;
+    const start = end - MONTH_MS;
+    const seg = records.filter((r) => r.itemId === itemId && r.timestamp < end && r.timestamp >= start);
+    out.push(unitsOf(seg));
+  }
+  return out;
 }

@@ -222,7 +222,7 @@ export default function SetLimits() {
         </div>
 
         {/* Sticky bottom section */}
-        <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-4">
+        <div className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 pt-4 pb-8">
           {/* Continue button */}
           <button
             onClick={handleContinue}

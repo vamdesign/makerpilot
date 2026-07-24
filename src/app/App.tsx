@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router';
+import { HashRouter, Routes, Route, Navigate } from 'react-router';
 import { Toaster } from 'sonner';
 import Home from './components/Home';
 import Welcome from './components/Welcome';
@@ -25,6 +25,7 @@ import BottomNav from './components/BottomNav';
 import { TRACKED_INVENTORY_KEY, writeTrackedToStorage } from './inventory/trackedInventory';
 import { INVENTORY_DEMO_SEED } from './data/inventoryDemo';
 import { seedActivityLogIfEmpty } from './data/activityLog';
+import { isDemoMode } from './demo/demoMode';
 
 export default function App() {
   useEffect(() => {
@@ -67,13 +68,16 @@ export default function App() {
     };
   }, []);
   useEffect(() => {
-    if (!localStorage.getItem(TRACKED_INVENTORY_KEY)) {
+    // Only auto-seed when in demo mode. Free-form testing starts empty.
+    if (isDemoMode() && !localStorage.getItem(TRACKED_INVENTORY_KEY)) {
       writeTrackedToStorage(INVENTORY_DEMO_SEED);
     }
-    seedActivityLogIfEmpty();
+    if (isDemoMode()) {
+      seedActivityLogIfEmpty();
+    }
   }, []);
   return (
-<BrowserRouter basename="/makerpilot">
+<HashRouter>
       <div className="h-full">
         <Routes>
           <Route path="/" element={<Welcome />} />
@@ -106,6 +110,6 @@ export default function App() {
           document.body,
         )}
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }

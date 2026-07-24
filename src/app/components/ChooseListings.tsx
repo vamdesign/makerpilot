@@ -11,6 +11,7 @@ import {
   readTrackedFromStorage,
   trackedItemCount,
 } from '../inventory/trackedInventory';
+import { DEMO_CHOOSE_LISTING_IDS, isDemoMode } from '../demo/demoMode';
 
 interface ListingItem {
   id: number;
@@ -63,8 +64,17 @@ type SortDirection = 'asc' | 'desc';
 export default function ChooseListings() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [selectedItems, setSelectedItems] = useState<Set<number>>(new Set());
-  const [selectionOrder, setSelectionOrder] = useState<number[]>([]);
+  const [selectedItems, setSelectedItems] = useState<Set<number>>(() => {
+    if (!isDemoMode()) return new Set();
+    // Demo: pre-check the arranged 6 listings (skip any already tracked in add mode)
+    const tracked = new Set((readTrackedFromStorage() ?? []).map((r) => r.id));
+    return new Set(DEMO_CHOOSE_LISTING_IDS.filter((id) => !tracked.has(id)));
+  });
+  const [selectionOrder, setSelectionOrder] = useState<number[]>(() => {
+    if (!isDemoMode()) return [];
+    const tracked = new Set((readTrackedFromStorage() ?? []).map((r) => r.id));
+    return DEMO_CHOOSE_LISTING_IDS.filter((id) => !tracked.has(id));
+  });
   const [sortType, setSortType] = useState<SortType>('top-sellers');
   const [qtyDirection, setQtyDirection] = useState<SortDirection>('desc');
   const [alphaDirection, setAlphaDirection] = useState<SortDirection>('asc');
@@ -184,8 +194,9 @@ export default function ChooseListings() {
 
   const sortedListings = getSortedListings();
   const isMaxReached = selectedItems.size >= maxSelectable;
-  // Demo: Continue is always clickable regardless of how many listings are selected.
-  const canContinue = true;
+  // Demo with seed already loaded: Continue stays active (6 of 10 tracked). Free-form: need a pick.
+  const canContinue =
+    selectedItems.size > 0 || (isDemoMode() && !isAddMode && trackedItemCount() > 0);
 
   return (
     <div className="relative mx-auto flex h-full min-h-0 max-w-[430px] flex-col">
@@ -356,8 +367,8 @@ export default function ChooseListings() {
           })}
         </div>
 
-        {/* Sticky bottom section — flush with phone frame (no bottom nav during onboarding) */}
-        <div className="absolute bottom-0 left-0 right-0 border-t border-gray-200 bg-white px-6 py-4">
+        {/* Sticky bottom section — full-bleed white, extra bottom padding for phone safe area */}
+        <div className="absolute bottom-0 left-0 right-0 border-t border-gray-200 bg-white px-6 pt-4 pb-8">
           {/* Continue button */}
           <button
             onClick={() => {

@@ -45,7 +45,7 @@ export default function RecordSale() {
       type: 'sale',
       itemId: current.id,
       itemTitle: current.title,
-      detail: `Sold ${quantity} · Stock ${current.stock} → ${newStock}`,
+      detail: `Stock ${current.stock} → ${newStock}`,
       timestamp: Date.now(),
     });
     setRows(updated);
@@ -79,9 +79,9 @@ export default function RecordSale() {
 
   return (
     <div className="relative mx-auto flex h-full min-h-0 max-w-[430px] flex-col bg-white">
-      <PageTitle title="Record Sale" subtitle="Quick entry for craft shows and markets." />
+      <PageTitle compact title="Record Sale" subtitle="Quick entry for craft shows and markets." />
 
-      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-28">
+      <div className="flex-1 overflow-y-auto px-4 pt-3 pb-28">
         {renderStepIndicator()}
 
         {step === 'select-item' && (
